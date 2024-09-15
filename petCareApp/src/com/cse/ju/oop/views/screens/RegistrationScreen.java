@@ -35,6 +35,7 @@ public class RegistrationScreen extends JFrame {
         gbc.gridy = 0;
         formPanel.add(new JLabel("First Name"), gbc);
         firstNameField = new JTextField();
+        firstNameField.setText("                                        ");
         gbc.gridx = 1;
         formPanel.add(firstNameField, gbc);
 
@@ -75,7 +76,7 @@ public class RegistrationScreen extends JFrame {
         gbc.gridy = 2;
         formPanel.add(new JLabel("Phone"), gbc);
         phoneField = new JTextField();
-        phoneField.setText("");
+        phoneField.setText("                                        ");
         gbc.gridx = 3;
         formPanel.add(phoneField, gbc);
 

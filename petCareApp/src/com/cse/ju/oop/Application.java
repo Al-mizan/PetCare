@@ -12,7 +12,7 @@ public class Application {
 
     private static void loginScr() {
         // if you want to registration show then comment out new LoginScreen();
-        new LoginScreen();
+//        new LoginScreen();
     }
 
     private static void RegistrationScr() {
