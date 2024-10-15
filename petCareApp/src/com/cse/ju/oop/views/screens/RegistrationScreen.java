@@ -166,25 +166,25 @@ public class RegistrationScreen extends JFrame {
         });
     }
     private void openUserInterfaceWindow() {
-//        SwingUtilities.invokeLater(() -> {
-//            try {
-//                System.out.println("Attempting to open AdminInterface");
-//                UserInterface userInterface = new UserInterface();
-//                userInterface.setVisible(true);
-//                System.out.println("UserInterface opened successfully");
-//                this.dispose();
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//                JOptionPane.showMessageDialog(this, "Error in open UserInterface Window: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-//            }
-//        });
+        SwingUtilities.invokeLater(() -> {
+            try {
+                System.out.println("Attempting to open AdminInterface");
+                UserInterface userInterface = new UserInterface();
+                userInterface.setVisible(true);
+                System.out.println("UserInterface opened successfully");
+                this.dispose();
+            } catch (Exception e) {
+                e.printStackTrace();
+                JOptionPane.showMessageDialog(this, "Error in open UserInterface Window: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        });
     }
     private void openVolunteerInterfaceWindow() {
         SwingUtilities.invokeLater(() -> {
             try {
                 System.out.println("Attempting to open VolunteerInterface");
-                VolunteerInterface volunteerInterface = new VolunteerInterface();
-                volunteerInterface.setVisible(true);
+                UserInterface userInterface = new UserInterface();
+                userInterface.setVisible(true);
                 System.out.println("VolunteerInterface opened successfully");
                 this.dispose();
             } catch (Exception e) {

@@ -54,7 +54,7 @@ public class VolunteerInterface extends JFrame {
 
         sidebarPanel.add(Box.createRigidArea(new Dimension(0, 50)));
 
-        String[] menuItems = {"Dashboard", "Add Pets", "Schedule"};
+        String[] menuItems = {"Dashboard", "Add Pets", "Schedule", "About Us"};
         for (String item : menuItems) {
             JButton menuButton = createMenuButton(item);
             sidebarPanel.add(menuButton);
@@ -99,12 +99,13 @@ public class VolunteerInterface extends JFrame {
     private void createContentPanel() {
         contentPanel = new JPanel(new GridBagLayout());
         contentPanel.setBackground(BACKGROUND_COLOR);
-        contentPanel.setBorder(new EmptyBorder(30, 30, 30, 30));
+        contentPanel.setBorder(new EmptyBorder(30, 10, 30, 50));
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridwidth = GridBagConstraints.REMAINDER;
         gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.insets = new Insets(0, 0, 20, 0);
+        gbc.insets = new Insets(10, 10, 20, 10);
+        gbc.weightx = 1;
 
         String[] cardTitles = {"Upcoming Tasks", "Recent Activities", "Total Rescues"};
         for (String title : cardTitles) {
@@ -176,7 +177,7 @@ public class VolunteerInterface extends JFrame {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            new VolunteerInterface();
+            new UserInterface();
         });
     }
 }
