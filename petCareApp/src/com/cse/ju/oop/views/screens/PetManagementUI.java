@@ -2,6 +2,7 @@ package petCareApp.src.com.cse.ju.oop.views.screens;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import java.awt.*;
@@ -121,7 +122,14 @@ public class PetManagementUI extends JFrame {
         tableModel.addRow(new Object[]{"1", "Buddy", "2", "Dog", "Golden Retriever", "Available"});
         tableModel.addRow(new Object[]{"2", "Milo", "1", "Cat", "Persian", "Adopted"});
         tableModel.addRow(new Object[]{"3", "Rex", "3", "Dog", "German Shepherd", "In Treatment"});
+        // Center table content in each cell
+        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+        centerRenderer.setHorizontalAlignment(JLabel.CENTER);
 
+        // Apply the renderer to each column
+        for (int i = 0; i < petTable.getColumnCount(); i++) {
+            petTable.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
+        }
         JScrollPane tableScrollPane = new JScrollPane(petTable);
         tableScrollPane.setBorder(BorderFactory.createEmptyBorder());
 

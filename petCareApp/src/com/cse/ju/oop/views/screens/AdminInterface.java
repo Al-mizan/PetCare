@@ -2,7 +2,6 @@ package petCareApp.src.com.cse.ju.oop.views.screens;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class AdminInterface extends JFrame {
@@ -111,12 +110,12 @@ public class AdminInterface extends JFrame {
 
     private void createLeftPanel() {
         leftPanel.add(Box.createRigidArea(new Dimension(5, 20)));
-        addMenuButton("Dashboard", leftPanel);
-        addMenuButton("Manage Pets", leftPanel);
-        addMenuButton("Manage Volunteers", leftPanel);
-        addMenuButton("Manage Users", leftPanel);
-        addMenuButton("Manage Food", leftPanel);
-        addMenuButton("About Us", leftPanel);
+//        addMenuButton("Dashboard", leftPanel, e -> showDashboard());
+        addMenuButton("Manage Pets", leftPanel, e -> openPetManagement());
+        addMenuButton("Manage Volunteers", leftPanel, e -> openVolunteerManagement());
+        addMenuButton("Manage Users", leftPanel, e -> openUserManagement());
+//        addMenuButton("Manage Food", leftPanel, e -> openFoodManagement());
+        addMenuButton("About Us", leftPanel, e -> showAboutUs());
 
         leftPanel.add(Box.createVerticalGlue());
     }
@@ -148,12 +147,45 @@ public class AdminInterface extends JFrame {
         return button;
     }
 
-    private void addMenuButton(String text, JPanel panel) {
+    private void addMenuButton(String text, JPanel panel, ActionListener listener) {
         JButton button = createStyledButton(text);
         button.setAlignmentX(Component.LEFT_ALIGNMENT);
         button.setMaximumSize(new Dimension(10000, 10000));
+        button.addActionListener(listener);
         panel.add(button);
         panel.add(Box.createRigidArea(new Dimension(0, 10)));
+    }
+
+    private void openPetManagement() {
+        SwingUtilities.invokeLater(() -> {
+            PetManagementUI petManagementUI = new PetManagementUI();
+            petManagementUI.setVisible(true);
+            dispose();
+        });
+    }
+
+    private void openVolunteerManagement() {
+        SwingUtilities.invokeLater(() -> {
+            UserManagementUI userManagementUI = new UserManagementUI();
+            userManagementUI.setVisible(true);
+            dispose();
+        });
+    }
+
+    private void openUserManagement() {
+        SwingUtilities.invokeLater(() -> {
+            UserManagementUI userManagementUI = new UserManagementUI();
+            userManagementUI.setVisible(true);
+            dispose();
+        });
+    }
+
+    private void showAboutUs() {
+        SwingUtilities.invokeLater(() -> {
+            AboutUsPage aboutUs = new AboutUsPage();
+            aboutUs.setVisible(true);
+            dispose();
+        });
     }
 
     private JPanel createDashboardCard(String title) {
@@ -162,9 +194,9 @@ public class AdminInterface extends JFrame {
         card.setBackground(Color.WHITE);
         card.setBorder(BorderFactory.createLineBorder(SECONDARY_COLOR, 2));
 
-        JLabel titleLabel = new JLabel(title,SwingConstants.CENTER);
+        JLabel titleLabel = new JLabel(title,SwingConstants.CENTER); ///////////
         titleLabel.setFont(NORMAL_FONT);
-        titleLabel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); //////
+        titleLabel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         card.add(titleLabel, BorderLayout.NORTH);
 
         JLabel countLabel = new JLabel(String.valueOf((int)(Math.random() * 100)));
