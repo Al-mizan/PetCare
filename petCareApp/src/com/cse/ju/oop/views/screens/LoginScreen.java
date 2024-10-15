@@ -204,7 +204,24 @@ public class LoginScreen extends JFrame {
                 e.printStackTrace();
                 JOptionPane.showMessageDialog(this, "Error opening AdminInterface: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             }
-        } else {
+        }
+        else if("Volunteer".equals(selectedRole)) {
+            try {
+                openVolunteerInterfaceWindow();
+            } catch (Exception e) {
+                e.printStackTrace();
+                JOptionPane.showMessageDialog(this, "Error opening AdminInterface: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+        else if("User".equals(selectedRole)) {
+            try {
+                openUserInterfaceWindow();
+            } catch (Exception e) {
+                e.printStackTrace();
+                JOptionPane.showMessageDialog(this, "Error opening AdminInterface: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+        else {
             // Handle other roles or show an error message
             JOptionPane.showMessageDialog(this, "Login functionality not implemented for " + selectedRole + " role.", "Login Error", JOptionPane.ERROR_MESSAGE);
         }
@@ -221,6 +238,34 @@ public class LoginScreen extends JFrame {
             } catch (Exception e) {
                 e.printStackTrace();
                 JOptionPane.showMessageDialog(this, "Error in openAdminInterfaceWindow: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        });
+    }
+    private void openUserInterfaceWindow() {
+//        SwingUtilities.invokeLater(() -> {
+//            try {
+//                System.out.println("Attempting to open AdminInterface");
+//                UserInterface userInterface = new UserInterface();
+//                userInterface.setVisible(true);
+//                System.out.println("UserInterface opened successfully");
+//                this.dispose();
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//                JOptionPane.showMessageDialog(this, "Error in open UserInterface Window: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+//            }
+//        });
+    }
+    private void openVolunteerInterfaceWindow() {
+        SwingUtilities.invokeLater(() -> {
+            try {
+                System.out.println("Attempting to open VolunteerInterface");
+                VolunteerInterface volunteerInterface = new VolunteerInterface();
+                volunteerInterface.setVisible(true);
+                System.out.println("VolunteerInterface opened successfully");
+                this.dispose();
+            } catch (Exception e) {
+                e.printStackTrace();
+                JOptionPane.showMessageDialog(this, "Error in open VolunteerInterface Window: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             }
         });
     }

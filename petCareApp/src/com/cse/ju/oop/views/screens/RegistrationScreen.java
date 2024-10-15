@@ -66,6 +66,7 @@ public class RegistrationScreen extends JFrame {
         add(mainPanel);
         setVisible(true);
 
+        signUpButton.addActionListener(e -> handleLogin());
         backButton.addActionListener(e -> openSignInWindow());
     }
 
@@ -110,6 +111,87 @@ public class RegistrationScreen extends JFrame {
 
         gbc.gridx = 1;
         panel.add(field, gbc);
+    }
+
+    private void handleLogin() {
+//        String username = userText.getText();
+//        String password = new String(passText.getPassword());
+        String selectedRole = (String) roleComboBox.getSelectedItem();
+
+        // Here you would typically validate the username and password
+        // For this example, we'll just check if the Admin role is selected
+        if ("Admin".equals(selectedRole)) {
+            // Open the AdminInterface
+            try {
+                openAdminInterfaceWindow();
+            } catch (Exception e) {
+                e.printStackTrace();
+                JOptionPane.showMessageDialog(this, "Error opening AdminInterface: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+        else if("Volunteer".equals(selectedRole)) {
+            try {
+                openVolunteerInterfaceWindow();
+            } catch (Exception e) {
+                e.printStackTrace();
+                JOptionPane.showMessageDialog(this, "Error opening AdminInterface: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+        else if("User".equals(selectedRole)) {
+            try {
+                openUserInterfaceWindow();
+            } catch (Exception e) {
+                e.printStackTrace();
+                JOptionPane.showMessageDialog(this, "Error opening AdminInterface: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+        else {
+            // Handle other roles or show an error message
+            JOptionPane.showMessageDialog(this, "Login functionality not implemented for " + selectedRole + " role.", "Login Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void openAdminInterfaceWindow() {
+        SwingUtilities.invokeLater(() -> {
+            try {
+                System.out.println("Attempting to open AdminInterface");
+                AdminInterface adminInterface = new AdminInterface();
+                adminInterface.setVisible(true);
+                System.out.println("AdminInterface opened successfully");
+                this.dispose();
+            } catch (Exception e) {
+                e.printStackTrace();
+                JOptionPane.showMessageDialog(this, "Error in openAdminInterfaceWindow: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        });
+    }
+    private void openUserInterfaceWindow() {
+//        SwingUtilities.invokeLater(() -> {
+//            try {
+//                System.out.println("Attempting to open AdminInterface");
+//                UserInterface userInterface = new UserInterface();
+//                userInterface.setVisible(true);
+//                System.out.println("UserInterface opened successfully");
+//                this.dispose();
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//                JOptionPane.showMessageDialog(this, "Error in open UserInterface Window: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+//            }
+//        });
+    }
+    private void openVolunteerInterfaceWindow() {
+        SwingUtilities.invokeLater(() -> {
+            try {
+                System.out.println("Attempting to open VolunteerInterface");
+                VolunteerInterface volunteerInterface = new VolunteerInterface();
+                volunteerInterface.setVisible(true);
+                System.out.println("VolunteerInterface opened successfully");
+                this.dispose();
+            } catch (Exception e) {
+                e.printStackTrace();
+                JOptionPane.showMessageDialog(this, "Error in open VolunteerInterface Window: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        });
     }
 
     private void openSignInWindow() {
