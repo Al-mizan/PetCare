@@ -1,179 +1,207 @@
 package petCareApp.src.com.cse.ju.oop.views.screens;
-//package com.cse.ju.oop.views.screens;
-
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
+import java.awt.event.*;
 
 public class LoginScreen extends JFrame {
     private JTextField userText;
     private JPasswordField passText;
     private JComboBox<String> roleComboBox;
-    private JPanel leftPanel;
-    private JPanel rightPanel;
-    private JLabel logoText;
-    private JLabel loginLabel;
-    private JButton loginButton;
-    private JButton clearButton;
-    private JLabel signUpLabel;
-    private double initialWidth;
-    private double initialHeight;
+    private JPanel leftPanel, rightPanel;
+    private JLabel logoLabel, welcomeLabel;
+    private JButton loginButton, signUpButton;
 
     public LoginScreen() {
-        setTitle("Pet Care");
+        setTitle("Pet Care Login");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(600, 400);
-        initialWidth = getWidth();
-        initialHeight = getHeight();
+        setSize(1000, 800);
+        setLocationRelativeTo(null);
         setLayout(new GridBagLayout());
 
         createPanels();
         createLoginComponents();
-
-        addComponentListener(new ComponentAdapter() {
-            @Override
-            public void componentResized(ComponentEvent e) {
-                rescaleComponents();
-            }
-        });
 
         setVisible(true);
     }
 
     private void createPanels() {
         GridBagConstraints gbc = new GridBagConstraints();
-
-        leftPanel = new JPanel(new GridBagLayout());
-        leftPanel.setBackground(new Color(230, 230, 255));
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.weightx = 0.3;
-        gbc.weighty = 1.0;
         gbc.fill = GridBagConstraints.BOTH;
+        gbc.weighty = 1.0;
+
+        leftPanel = new JPanel(new GridBagLayout()) {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                Graphics2D g2d = (Graphics2D) g.create();
+                int w = getWidth(), h = getHeight();
+                GradientPaint gp = new GradientPaint(0, 0, new Color(65, 105, 225), w, h, new Color(100, 149, 237));
+                g2d.setPaint(gp);
+                g2d.fillRect(0, 0, w, h);
+                g2d.dispose();
+            }
+        };
+        gbc.gridx = 0;
+        gbc.weightx = 0.33; // 1/3 of the total width
         add(leftPanel, gbc);
 
         rightPanel = new JPanel(new GridBagLayout());
+        rightPanel.setBackground(Color.WHITE);
         gbc.gridx = 1;
-        gbc.weightx = 0.7;
+        gbc.weightx = 0.67; // 2/3 of the total width
         add(rightPanel, gbc);
     }
 
     private void createLoginComponents() {
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(5, 5, 5, 5);
+        gbc.insets = new Insets(10, 10, 10, 10);
 
-        // Logo
-        String logoPath = "C:/Users/HP/Downloads/pet CARE.png";
-        ImageIcon originalIcon = new ImageIcon(logoPath);
-        Image scaledImage = originalIcon.getImage().getScaledInstance(130, 130, Image.SCALE_SMOOTH);
-        ImageIcon scaledIcon = new ImageIcon(scaledImage);
-        JLabel logoLabel = new JLabel(scaledIcon);
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.anchor = GridBagConstraints.CENTER;
-        leftPanel.add(logoLabel, gbc);
+        // Left panel components
+//        ImageIcon logoIcon = new ImageIcon(getClass().getResource("/path/to/your/logo.png")); // Update path
+//        Image img = logoIcon.getImage().getScaledInstance(150, 150, Image.SCALE_SMOOTH);
+//        logoLabel = new JLabel(new ImageIcon(img));
+//        gbc.gridx = 0;
+//        gbc.gridy = 0;
+//        leftPanel.add(logoLabel, gbc);
 
-        // Logo text
-        logoText = new JLabel("PetsCare", JLabel.CENTER);
-        logoText.setFont(new Font("Arial", Font.BOLD, 18));
+        JLabel brandLabel = new JLabel("PetCare");
+        brandLabel.setFont(new Font("Arial", Font.BOLD, 40));
+        brandLabel.setForeground(Color.WHITE);
         gbc.gridy = 1;
-        leftPanel.add(logoText, gbc);
+        leftPanel.add(brandLabel, gbc);
 
-        // Login components
-        gbc.anchor = GridBagConstraints.WEST;
+        JLabel sloganLabel = new JLabel("Care for your furry friends");
+        sloganLabel.setFont(new Font("Arial", Font.ITALIC, 18));
+        sloganLabel.setForeground(Color.WHITE);
+        gbc.gridy = 2;
+        leftPanel.add(sloganLabel, gbc);
 
-        loginLabel = new JLabel("LOGIN");
-        loginLabel.setFont(new Font("Arial", Font.BOLD, 18));
+        // Right panel components
+        welcomeLabel = new JLabel("Welcome Back!");
+        welcomeLabel.setFont(new Font("Arial", Font.BOLD, 36));
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.gridwidth = 2;
-        rightPanel.add(loginLabel, gbc);
+        gbc.anchor = GridBagConstraints.CENTER;
+        rightPanel.add(welcomeLabel, gbc);
 
-        JLabel userLabel = new JLabel("USERNAME:");
-        gbc.gridy = 1;
+        gbc.anchor = GridBagConstraints.WEST;
         gbc.gridwidth = 1;
-        rightPanel.add(userLabel, gbc);
 
-        userText = new JTextField(15);
-        gbc.gridx = 1;
+        userText = createStyledTextField("Username");
+        gbc.gridy = 1;
         rightPanel.add(userText, gbc);
 
-        JLabel passLabel = new JLabel("PASSWORD:");
-        gbc.gridx = 0;
+        passText = createStyledPasswordField("Password");
         gbc.gridy = 2;
-        rightPanel.add(passLabel, gbc);
-
-        passText = new JPasswordField(15);
-        gbc.gridx = 1;
         rightPanel.add(passText, gbc);
 
-        JLabel roleLabel = new JLabel("LOGIN AS:");
-        gbc.gridx = 0;
-        gbc.gridy = 3;
-        rightPanel.add(roleLabel, gbc);
-
-        String[] roles = {"Admin", "User"};
+        String[] roles = {"User", "Admin", "Volunteer"};
         roleComboBox = new JComboBox<>(roles);
-        gbc.gridx = 1;
+        styleComboBox(roleComboBox);
+        gbc.gridy = 3;
         rightPanel.add(roleComboBox, gbc);
 
-        loginButton = new JButton("Login");
-        gbc.gridx = 0;
+        loginButton = createStyledButton("Login", new Color(65, 105, 225));
         gbc.gridy = 4;
+        gbc.gridwidth = 2;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
         rightPanel.add(loginButton, gbc);
 
-        clearButton = new JButton("Clear");
+        ////////
+        gbc.gridx = 0;
+        gbc.gridy++;
+        JLabel label = new JLabel("                             Or,");
+        label.setFont(new Font("Arial", Font.BOLD, 18));
+        rightPanel.add(label, gbc);
         gbc.gridx = 1;
-        rightPanel.add(clearButton, gbc);
+//        rightPanel.add(field, gbc);
+        /////////
 
-        signUpLabel = new JLabel("SIGN UP");
-        signUpLabel.setForeground(Color.BLUE);
-        signUpLabel.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        gbc.gridx = 1;
-        gbc.gridy = 5;
-        gbc.anchor = GridBagConstraints.EAST;
-        rightPanel.add(signUpLabel, gbc);
+        signUpButton = createStyledButton("Create Account", new Color(80, 112, 211));
+        gbc.gridx = 0;
+        gbc.gridy = 6;
+        rightPanel.add(signUpButton, gbc);
 
-        clearButton.addActionListener(e -> {
-            userText.setText("");
-            passText.setText("");
+        // Event listeners
+        loginButton.addActionListener(e -> handleLogin());
+        signUpButton.addActionListener(e -> openSignUpWindow());
+    }
+
+    private JTextField createStyledTextField(String placeholder) {
+        JTextField textField = new JTextField(20);
+        textField.setPreferredSize(new Dimension(300, 50));
+        textField.setFont(new Font("Arial", Font.PLAIN, 16));
+        textField.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(new Color(200, 200, 200)),
+                BorderFactory.createEmptyBorder(5, 10, 5, 10)
+        ));
+        addPlaceholderStyle(textField, placeholder);
+        return textField;
+    }
+
+    private JPasswordField createStyledPasswordField(String placeholder) {
+        JPasswordField passwordField = new JPasswordField(20);
+        passwordField.setPreferredSize(new Dimension(300, 50));
+        passwordField.setFont(new Font("Arial", Font.PLAIN, 16));
+        passwordField.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(new Color(200, 200, 200)),
+                BorderFactory.createEmptyBorder(5, 10, 5, 10)
+        ));
+        addPlaceholderStyle(passwordField, placeholder);
+        return passwordField;
+    }
+
+    private void styleComboBox(JComboBox<String> comboBox) {
+        comboBox.setPreferredSize(new Dimension(325, 50));
+        comboBox.setFont(new Font("Arial", Font.PLAIN, 16));
+        comboBox.setBorder(BorderFactory.createLineBorder(new Color(200, 200, 200)));
+    }
+
+    private JButton createStyledButton(String text, Color color) {
+        JButton button = new JButton(text);
+        button.setPreferredSize(new Dimension(300, 60));
+        button.setFont(new Font("Arial", Font.BOLD, 18)); // Increased font size
+        button.setForeground(Color.WHITE);
+        button.setBackground(color);
+        button.setBorderPainted(false);
+        button.setFocusPainted(false);
+        button.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        return button;
+    }
+
+    private void addPlaceholderStyle(JTextField textField, String placeholder) {
+        textField.setForeground(Color.GRAY);
+        textField.setText(placeholder);
+        textField.addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                if (textField.getText().equals(placeholder)) {
+                    textField.setText("");
+                    textField.setForeground(Color.BLACK);
+                }
+            }
+            @Override
+            public void focusLost(FocusEvent e) {
+                if (textField.getText().isEmpty()) {
+                    textField.setForeground(Color.GRAY);
+                    textField.setText(placeholder);
+                }
+            }
         });
     }
 
-    private void rescaleComponents() {
-        double widthRatio = getWidth() / initialWidth;
-        double heightRatio = getHeight() / initialHeight;
-        double scaleFactor = Math.min(widthRatio, heightRatio);
-
-        Font logoFont = logoText.getFont().deriveFont((float) (18 * scaleFactor));
-        logoText.setFont(logoFont);
-
-        Font loginFont = loginLabel.getFont().deriveFont((float) (18 * scaleFactor));
-        loginLabel.setFont(loginFont);
-
-        rescaleComponentFont(userText, scaleFactor);
-        rescaleComponentFont(passText, scaleFactor);
-        rescaleComponentFont(roleComboBox, scaleFactor);
-        rescaleComponentFont(loginButton, scaleFactor);
-        rescaleComponentFont(clearButton, scaleFactor);
-        rescaleComponentFont(signUpLabel, scaleFactor);
-
-        Component[] components = rightPanel.getComponents();
-        for (Component comp : components) {
-            if (comp instanceof JLabel) {
-                rescaleComponentFont(comp, scaleFactor);
-            }
-        }
-
-        revalidate();
-        repaint();
+    private void handleLogin() {
+        // Add login logic here
+        System.out.println("Login button clicked");
     }
 
-    private void rescaleComponentFont(Component component, double scaleFactor) {
-        Font currentFont = component.getFont();
-        Font newFont = currentFont.deriveFont((float) (currentFont.getSize() * scaleFactor));
-        component.setFont(newFont);
+    private void openSignUpWindow() {
+        new RegistrationScreen();
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(LoginScreen::new);
     }
 }
