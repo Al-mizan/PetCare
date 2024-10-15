@@ -43,13 +43,13 @@ public class LoginScreen extends JFrame {
             }
         };
         gbc.gridx = 0;
-        gbc.weightx = 0.33; // 1/3 of the total width
+        gbc.weightx = 0.25; // 25% of the total width
         add(leftPanel, gbc);
 
         rightPanel = new JPanel(new GridBagLayout());
         rightPanel.setBackground(Color.WHITE);
         gbc.gridx = 1;
-        gbc.weightx = 0.67; // 2/3 of the total width
+        gbc.weightx = 0.75; // 75% of the total width
         add(rightPanel, gbc);
     }
 
@@ -109,15 +109,12 @@ public class LoginScreen extends JFrame {
         gbc.fill = GridBagConstraints.HORIZONTAL;
         rightPanel.add(loginButton, gbc);
 
-        ////////
         gbc.gridx = 0;
         gbc.gridy++;
         JLabel label = new JLabel("                             Or,");
         label.setFont(new Font("Arial", Font.BOLD, 18));
         rightPanel.add(label, gbc);
         gbc.gridx = 1;
-//        rightPanel.add(field, gbc);
-        /////////
 
         signUpButton = createStyledButton("Create Account", new Color(80, 112, 211));
         gbc.gridx = 0;
@@ -193,8 +190,39 @@ public class LoginScreen extends JFrame {
     }
 
     private void handleLogin() {
-        // Add login logic here
-        System.out.println("Login button clicked");
+        String username = userText.getText();
+        String password = new String(passText.getPassword());
+        String selectedRole = (String) roleComboBox.getSelectedItem();
+
+        // Here you would typically validate the username and password
+        // For this example, we'll just check if the Admin role is selected
+        if ("Admin".equals(selectedRole)) {
+            // Open the AdminInterface
+            try {
+                openAdminInterfaceWindow();
+            } catch (Exception e) {
+                e.printStackTrace();
+                JOptionPane.showMessageDialog(this, "Error opening AdminInterface: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        } else {
+            // Handle other roles or show an error message
+            JOptionPane.showMessageDialog(this, "Login functionality not implemented for " + selectedRole + " role.", "Login Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void openAdminInterfaceWindow() {
+        SwingUtilities.invokeLater(() -> {
+            try {
+                System.out.println("Attempting to open AdminInterface");
+                AdminInterface adminInterface = new AdminInterface();
+                adminInterface.setVisible(true);
+                System.out.println("AdminInterface opened successfully");
+                this.dispose();
+            } catch (Exception e) {
+                e.printStackTrace();
+                JOptionPane.showMessageDialog(this, "Error in openAdminInterfaceWindow: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        });
     }
 
     private void openSignUpWindow() {
