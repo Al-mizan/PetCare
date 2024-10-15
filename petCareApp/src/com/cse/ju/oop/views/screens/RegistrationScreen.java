@@ -114,6 +114,7 @@ public class RegistrationScreen extends JFrame {
 
     private void openSignInWindow() {
         new LoginScreen();
+        dispose();
     }
 
     public static void main(String[] args) {
