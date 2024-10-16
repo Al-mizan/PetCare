@@ -9,10 +9,10 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-public class PetManagementUI extends JFrame {
+public class ShowPetsUI extends JFrame {
     private JPanel mainPanel, topPanel, contentPanel, bottomPanel;
     private JTable petTable;
-    private JButton addButton, editButton, deleteButton, backButton;
+    private JButton backButton;
     private final Color PRIMARY_COLOR = new Color(41, 128, 185);
     private final Color SECONDARY_COLOR = new Color(52, 152, 219);
     private final Color BACKGROUND_COLOR = new Color(236, 240, 241);
@@ -21,14 +21,14 @@ public class PetManagementUI extends JFrame {
     private final Font NORMAL_FONT = new Font("Segoe UI", Font.PLAIN, 16);
     private final Font TABLE_HEADER_FONT = new Font("Segoe UI", Font.BOLD, 14);
 
-    public PetManagementUI() {
+    public ShowPetsUI() {
         initializeFrame();
         createPanels();
         setVisible(true);
     }
 
     private void initializeFrame() {
-        setTitle("PetCare - Manage Pets");
+        setTitle("PetCare - Show Pets");
         setSize(1000, 800);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
@@ -60,11 +60,11 @@ public class PetManagementUI extends JFrame {
                 new EmptyBorder(15, 20, 15, 20)
         ));
 
-        JLabel titleLabel = new JLabel("Manage Pets");
+        JLabel titleLabel = new JLabel("Show Pets");
         titleLabel.setFont(HEADER_FONT);
         titleLabel.setForeground(TEXT_COLOR);
 
-        JLabel adminLabel = new JLabel("Admin Dashboard");
+        JLabel adminLabel = new JLabel("Volunteer Dashboard");
         adminLabel.setFont(NORMAL_FONT);
         adminLabel.setForeground(SECONDARY_COLOR);
 
@@ -140,19 +140,9 @@ public class PetManagementUI extends JFrame {
         bottomPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 0));
         bottomPanel.setBackground(BACKGROUND_COLOR);
 
-        addButton = createStyledButton("Add Pet");
-        editButton = createStyledButton("Edit Pet");
-        deleteButton = createStyledButton("Delete Pet");
         backButton = createStyledButton("Back to Dashboard");
 
-        addButton.addActionListener(e -> addPet());
-        editButton.addActionListener(e -> editPet());
-        deleteButton.addActionListener(e -> deletePet());
         backButton.addActionListener(e -> backToDashboard());
-
-        bottomPanel.add(addButton);
-        bottomPanel.add(editButton);
-        bottomPanel.add(deleteButton);
         bottomPanel.add(backButton);
     }
 
@@ -181,38 +171,10 @@ public class PetManagementUI extends JFrame {
         return button;
     }
 
-    private void addPet() {
-        JOptionPane.showMessageDialog(this, "Add Pet functionality will be implemented here.", "Add Pet", JOptionPane.INFORMATION_MESSAGE);
-    }
-
-    private void editPet() {
-        int selectedRow = petTable.getSelectedRow();
-        if (selectedRow != -1) {
-            String petName = (String) petTable.getValueAt(selectedRow, 1);
-            JOptionPane.showMessageDialog(this, "Edit Pet functionality for " + petName + " will be implemented here.", "Edit Pet", JOptionPane.INFORMATION_MESSAGE);
-        } else {
-            JOptionPane.showMessageDialog(this, "Please select a pet to edit.", "No Pet Selected", JOptionPane.WARNING_MESSAGE);
-        }
-    }
-
-    private void deletePet() {
-        int selectedRow = petTable.getSelectedRow();
-        if (selectedRow != -1) {
-            String petName = (String) petTable.getValueAt(selectedRow, 1);
-            int confirm = JOptionPane.showConfirmDialog(this, "Are you sure you want to delete " + petName + "?", "Confirm Deletion", JOptionPane.YES_NO_OPTION);
-            if (confirm == JOptionPane.YES_OPTION) {
-                ((DefaultTableModel) petTable.getModel()).removeRow(selectedRow);
-                JOptionPane.showMessageDialog(this, petName + " has been deleted.", "Pet Deleted", JOptionPane.INFORMATION_MESSAGE);
-            }
-        } else {
-            JOptionPane.showMessageDialog(this, "Please select a pet to delete.", "No Pet Selected", JOptionPane.WARNING_MESSAGE);
-        }
-    }
-
     private void backToDashboard() {
         int confirm = JOptionPane.showConfirmDialog(this, "Are you sure you want to go back to the dashboard?", "Confirm Exit", JOptionPane.YES_NO_OPTION);
         if (confirm == JOptionPane.YES_OPTION) {
-            new AdminInterface();
+            new VolunteerInterface();
             dispose();
         }
     }

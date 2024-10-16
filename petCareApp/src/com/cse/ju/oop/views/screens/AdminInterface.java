@@ -110,11 +110,9 @@ public class AdminInterface extends JFrame {
 
     private void createLeftPanel() {
         leftPanel.add(Box.createRigidArea(new Dimension(5, 20)));
-//        addMenuButton("Dashboard", leftPanel, e -> showDashboard());
         addMenuButton("Manage Pets", leftPanel, e -> openPetManagement());
         addMenuButton("Manage Volunteers", leftPanel, e -> openVolunteerManagement());
         addMenuButton("Manage Users", leftPanel, e -> openUserManagement());
-//        addMenuButton("Manage Food", leftPanel, e -> openFoodManagement());
         addMenuButton("About Us", leftPanel, e -> showAboutUs());
 
         leftPanel.add(Box.createVerticalGlue());
@@ -158,8 +156,8 @@ public class AdminInterface extends JFrame {
 
     private void openPetManagement() {
         SwingUtilities.invokeLater(() -> {
-            PetManagementUI petManagementUI = new PetManagementUI();
-            petManagementUI.setVisible(true);
+            ShowPetsUI showPetsUI = new ShowPetsUI();
+            showPetsUI.setVisible(true);
             dispose();
         });
     }

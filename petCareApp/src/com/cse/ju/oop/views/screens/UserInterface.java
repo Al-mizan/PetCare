@@ -3,6 +3,7 @@ package petCareApp.src.com.cse.ju.oop.views.screens;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -54,19 +55,16 @@ public class UserInterface extends JFrame {
 
         sidebarPanel.add(Box.createRigidArea(new Dimension(0, 50)));
 
-        String[] menuItems = {"Dashboard", "Pet Adopt" ,"Add Pets", "About Us"};
-        for (String item : menuItems) {
-            JButton menuButton = createMenuButton(item);
-            sidebarPanel.add(menuButton);
-            sidebarPanel.add(Box.createRigidArea(new Dimension(0, 10)));
-        }
+        sidebarPanel.add(Box.createRigidArea(new Dimension(5, 20)));
+        createMenuButton("Dashboard", sidebarPanel, e -> {/* Dashboard action */});
+        createMenuButton("Pet Adopt", sidebarPanel, e -> openPetAdopt());
+        createMenuButton("Add Pets", sidebarPanel, e -> openAddPet());
+        createMenuButton("About Us", sidebarPanel, e -> showAboutUs());
 
         sidebarPanel.add(Box.createVerticalGlue());
 
-        logoutButton = createMenuButton("Logout");
+        logoutButton = createMenuButton("Logout", sidebarPanel, e -> handleLogout());
         logoutButton.setBackground(new Color(231, 76, 60));
-        logoutButton.addActionListener(e -> handleLogout());
-        sidebarPanel.add(logoutButton);
     }
 
     private void createMainPanel() {
@@ -114,7 +112,7 @@ public class UserInterface extends JFrame {
         }
     }
 
-    private JButton createMenuButton(String text) {
+    private JButton createMenuButton(String text, JPanel sidebarPanel, ActionListener actionListener) {
         JButton button = new JButton(text);
         button.setFont(SIDEBAR_FONT);
         button.setForeground(Color.WHITE);
@@ -137,7 +135,35 @@ public class UserInterface extends JFrame {
             }
         });
 
+        button.addActionListener(actionListener);
+        sidebarPanel.add(button);
+        sidebarPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+
         return button;
+    }
+
+    private void openPetAdopt() {
+//        SwingUtilities.invokeLater(() -> {
+//            PetAdoptUI petAdoptUI = new PetAdoptUI();
+//            petAdoptUI.setVisible(true);
+//            dispose();
+//        });
+    }
+
+    private void openAddPet() {
+        SwingUtilities.invokeLater(() -> {
+            AddPetUI addPetUI = new AddPetUI();
+            addPetUI.setVisible(true);
+            dispose();
+        });
+    }
+
+    private void showAboutUs() {
+        SwingUtilities.invokeLater(() -> {
+            AboutUsPage aboutUs = new AboutUsPage(); /// create new window for userInterface
+            aboutUs.setVisible(true);
+            dispose();
+        });
     }
 
     private JPanel createDashboardCard(String title) {
@@ -145,12 +171,12 @@ public class UserInterface extends JFrame {
         card.setBackground(Color.WHITE);
         card.setBorder(BorderFactory.createLineBorder(new Color(189, 195, 199), 2));
 
-        JLabel titleLabel = new JLabel(title,SwingConstants.CENTER);
+        JLabel titleLabel = new JLabel(title, SwingConstants.CENTER);
         titleLabel.setFont(NORMAL_FONT);
         titleLabel.setBorder(new EmptyBorder(20, 20, 20, 20));
         card.add(titleLabel, BorderLayout.NORTH);
 
-        JLabel contentLabel = new JLabel("Content for " + title); ////////
+        JLabel contentLabel = new JLabel("Content for " + title);
         contentLabel.setHorizontalAlignment(SwingConstants.CENTER);
         contentLabel.setBorder(new EmptyBorder(30, 15, 30, 15));
         card.add(contentLabel, BorderLayout.CENTER);
@@ -165,8 +191,8 @@ public class UserInterface extends JFrame {
         if (confirm == JOptionPane.YES_OPTION) {
             // TODO: Implement actual logout logic
             System.out.println("Logout");
-            this.dispose();
             new LoginScreen().setVisible(true);
+            this.dispose();
         }
     }
 

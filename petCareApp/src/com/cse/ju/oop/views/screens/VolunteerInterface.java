@@ -3,6 +3,7 @@ package petCareApp.src.com.cse.ju.oop.views.screens;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -24,7 +25,7 @@ public class VolunteerInterface extends JFrame {
     }
 
     private void initializeFrame() {
-        setTitle("PetCare Volunteer Dashboard");
+        setTitle("PetCare - Volunteer Dashboard");
         setSize(1000, 800);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
@@ -54,19 +55,15 @@ public class VolunteerInterface extends JFrame {
 
         sidebarPanel.add(Box.createRigidArea(new Dimension(0, 50)));
 
-        String[] menuItems = {"Dashboard", "Add Pets", "Schedule", "About Us"};
-        for (String item : menuItems) {
-            JButton menuButton = createMenuButton(item);
-            sidebarPanel.add(menuButton);
-            sidebarPanel.add(Box.createRigidArea(new Dimension(0, 10)));
-        }
+        createMenuButton("Dashboard", sidebarPanel, e -> openDashboard());
+        createMenuButton("Add Pets", sidebarPanel, e -> openAddPets());
+        createMenuButton("Show Pets", sidebarPanel, e -> openShowPets());
+        createMenuButton("About Us", sidebarPanel, e -> openAboutUs());
 
         sidebarPanel.add(Box.createVerticalGlue());
 
-        logoutButton = createMenuButton("Logout");
+        logoutButton = createMenuButton("Logout", sidebarPanel, e -> handleLogout());
         logoutButton.setBackground(new Color(231, 76, 60));
-        logoutButton.addActionListener(e -> handleLogout());
-        sidebarPanel.add(logoutButton);
     }
 
     private void createMainPanel() {
@@ -114,7 +111,7 @@ public class VolunteerInterface extends JFrame {
         }
     }
 
-    private JButton createMenuButton(String text) {
+    private JButton createMenuButton(String text, JPanel panel, ActionListener actionListener) {
         JButton button = new JButton(text);
         button.setFont(SIDEBAR_FONT);
         button.setForeground(Color.WHITE);
@@ -137,6 +134,10 @@ public class VolunteerInterface extends JFrame {
             }
         });
 
+        button.addActionListener(actionListener);
+        panel.add(button);
+        panel.add(Box.createRigidArea(new Dimension(0, 10)));
+
         return button;
     }
 
@@ -145,17 +146,48 @@ public class VolunteerInterface extends JFrame {
         card.setBackground(Color.WHITE);
         card.setBorder(BorderFactory.createLineBorder(new Color(189, 195, 199), 2));
 
-        JLabel titleLabel = new JLabel(title,SwingConstants.CENTER);
+        JLabel titleLabel = new JLabel(title, SwingConstants.CENTER);
         titleLabel.setFont(NORMAL_FONT);
         titleLabel.setBorder(new EmptyBorder(20, 20, 20, 20));
         card.add(titleLabel, BorderLayout.NORTH);
 
-        JLabel contentLabel = new JLabel("Content for " + title); ////////
+        JLabel contentLabel = new JLabel("Content for " + title);
         contentLabel.setHorizontalAlignment(SwingConstants.CENTER);
         contentLabel.setBorder(new EmptyBorder(30, 15, 30, 15));
         card.add(contentLabel, BorderLayout.CENTER);
 
         return card;
+    }
+
+    private void openDashboard() {
+        // Placeholder for dashboard action
+        JOptionPane.showMessageDialog(this, "Opening Dashboard");
+    }
+
+    private void openAddPets() {
+//        SwingUtilities.invokeLater(() -> {
+//            // Replace AddPetsScreen with your actual class name
+//            AddPetsScreen addPetsScreen = new AddPetsScreen();
+//            addPetsScreen.setVisible(true);
+//            dispose();
+//        });
+    }
+
+    private void openShowPets() {
+        SwingUtilities.invokeLater(() -> {
+            // Replace ShowPetsScreen with your actual class name
+            ShowPetsUI showPetsUI = new ShowPetsUI();
+            showPetsUI.setVisible(true);
+            dispose();
+        });
+    }
+
+    private void openAboutUs() {
+        SwingUtilities.invokeLater(() -> {
+            AboutUsPage aboutUs = new AboutUsPage();
+            aboutUs.setVisible(true);
+            dispose();
+        });
     }
 
     private void handleLogout() {
@@ -177,7 +209,7 @@ public class VolunteerInterface extends JFrame {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            new UserInterface();
+            new VolunteerInterface();
         });
     }
 }

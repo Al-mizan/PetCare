@@ -183,8 +183,8 @@ public class RegistrationScreen extends JFrame {
         SwingUtilities.invokeLater(() -> {
             try {
                 System.out.println("Attempting to open VolunteerInterface");
-                UserInterface userInterface = new UserInterface();
-                userInterface.setVisible(true);
+                VolunteerInterface volunteerInterface = new VolunteerInterface();
+                volunteerInterface.setVisible(true);
                 System.out.println("VolunteerInterface opened successfully");
                 this.dispose();
             } catch (Exception e) {
