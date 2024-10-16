@@ -2,6 +2,7 @@ package petCareApp.src.com.cse.ju.oop.views.screens;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionListener;
@@ -90,7 +91,7 @@ public class PetAdoptUIUser extends JFrame {
         filterPanel.setBorder(titledBorder);
 
         addFilterSection(filterPanel, "Pet Type", new String[]{"Cat", "Dog", "Bird"});
-        addFilterSection(filterPanel, "Age", new String[]{"0-9 months", "1-3 years", "4 years and above"});
+        addFilterSection(filterPanel, "Age", new String[]{"0-11 months", "1-3 years", "4 years and above"});
 
         sidebarPanel.add(filterPanel);
     }
@@ -172,6 +173,18 @@ public class PetAdoptUIUser extends JFrame {
         addPetToTable("2", "Milo", "1", "Pussy Cat", "Cat");
         addPetToTable("3", "Charlie", "3", "American Dog", "Dog");
         addPetToTable("4", "Max", "5", "Russian Cat", "Cat");
+
+        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+        centerRenderer.setHorizontalAlignment(JLabel.CENTER);
+
+        // Apply the renderer to each column
+        for (int i = 0; i < petTable.getColumnCount(); i++) {
+            petTable.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
+        }
+        JScrollPane tableScrollPane = new JScrollPane(petTable);
+        tableScrollPane.setBorder(BorderFactory.createEmptyBorder());
+
+        contentPanel.add(tableScrollPane, BorderLayout.CENTER);
     }
 
     private void addPetToTable(String id, String name, String age, String species, String type) {
