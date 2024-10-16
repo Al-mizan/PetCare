@@ -140,17 +140,14 @@ public class PetManagementUI extends JFrame {
         bottomPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 0));
         bottomPanel.setBackground(BACKGROUND_COLOR);
 
-        addButton = createStyledButton("Add Pet");
         editButton = createStyledButton("Edit Pet");
         deleteButton = createStyledButton("Delete Pet");
         backButton = createStyledButton("Back to Dashboard");
 
-        addButton.addActionListener(e -> addPet());
         editButton.addActionListener(e -> editPet());
         deleteButton.addActionListener(e -> deletePet());
         backButton.addActionListener(e -> backToDashboard());
 
-        bottomPanel.add(addButton);
         bottomPanel.add(editButton);
         bottomPanel.add(deleteButton);
         bottomPanel.add(backButton);
@@ -179,10 +176,6 @@ public class PetManagementUI extends JFrame {
         });
 
         return button;
-    }
-
-    private void addPet() {
-        JOptionPane.showMessageDialog(this, "Add Pet functionality will be implemented here.", "Add Pet", JOptionPane.INFORMATION_MESSAGE);
     }
 
     private void editPet() {
@@ -224,7 +217,7 @@ public class PetManagementUI extends JFrame {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            new ShowPetsUI();
+            new PetManagementUI();
         });
     }
 }

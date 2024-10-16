@@ -60,25 +60,26 @@ public class VolunteerManagementUI extends JFrame {
                 new EmptyBorder(15, 20, 15, 20)
         ));
 
-        JLabel titleLabel = new JLabel("Admin");
+        JLabel titleLabel = new JLabel("Manage Volunteers");
         titleLabel.setFont(HEADER_FONT);
         titleLabel.setForeground(TEXT_COLOR);
 
-//        logoutButton = createStyledButton("Logout");
-//        logoutButton.setPreferredSize(new Dimension(100, 30));
+        JLabel adminLabel = new JLabel("Admin Dashboard");
+        adminLabel.setFont(NORMAL_FONT);
+        adminLabel.setForeground(SECONDARY_COLOR);
 
-        topPanel.add(titleLabel, BorderLayout.CENTER);
-//        topPanel.add(logoutButton, BorderLayout.EAST);
+        topPanel.add(titleLabel, BorderLayout.WEST);
+        topPanel.add(adminLabel, BorderLayout.EAST);
     }
 
     private void createContentPanel() {
         contentPanel = new JPanel(new BorderLayout(0, 20));
         contentPanel.setBackground(BACKGROUND_COLOR);
 
-        JLabel volunteerLabel = new JLabel("Volunteer Management");
-        volunteerLabel.setFont(new Font("Segoe UI", Font.BOLD, 20));
-        volunteerLabel.setForeground(TEXT_COLOR);
-        volunteerLabel.setBorder(new EmptyBorder(0, 0, 10, 0));
+//        JLabel volunteerLabel = new JLabel("Volunteer Management");
+//        volunteerLabel.setFont(new Font("Segoe UI", Font.BOLD, 20));
+//        volunteerLabel.setForeground(TEXT_COLOR);
+//        volunteerLabel.setBorder(new EmptyBorder(0, 0, 10, 0));
 
         String[] columnNames = {"ID", "Name", "Phone Number", "Number of Rescues"};
         DefaultTableModel tableModel = new DefaultTableModel(columnNames, 0) {
@@ -140,7 +141,7 @@ public class VolunteerManagementUI extends JFrame {
         JScrollPane tableScrollPane = new JScrollPane(volunteerTable);
         tableScrollPane.setBorder(BorderFactory.createEmptyBorder());
 
-        contentPanel.add(volunteerLabel, BorderLayout.NORTH);
+//        contentPanel.add(volunteerLabel, BorderLayout.NORTH);
         contentPanel.add(tableScrollPane, BorderLayout.CENTER);
     }
 
@@ -211,7 +212,7 @@ public class VolunteerManagementUI extends JFrame {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            new UserManagementUI();
+            new VolunteerManagementUI();
         });
     }
 }

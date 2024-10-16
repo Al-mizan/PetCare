@@ -9,7 +9,7 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-public class ShowPetsUI extends JFrame {
+public class ShowPetsUIVolunteer extends JFrame {
     private JPanel mainPanel, topPanel, contentPanel, bottomPanel;
     private JTable petTable;
     private JButton backButton;
@@ -21,7 +21,7 @@ public class ShowPetsUI extends JFrame {
     private final Font NORMAL_FONT = new Font("Segoe UI", Font.PLAIN, 16);
     private final Font TABLE_HEADER_FONT = new Font("Segoe UI", Font.BOLD, 14);
 
-    public ShowPetsUI() {
+    public ShowPetsUIVolunteer() {
         initializeFrame();
         createPanels();
         setVisible(true);
@@ -186,7 +186,7 @@ public class ShowPetsUI extends JFrame {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            new ShowPetsUI();
+            new ShowPetsUIVolunteer();
         });
     }
 }

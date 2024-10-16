@@ -60,25 +60,26 @@ public class UserManagementUI extends JFrame {
                 new EmptyBorder(15, 20, 15, 20)
         ));
 
-        JLabel titleLabel = new JLabel("Admin");
+        JLabel titleLabel = new JLabel("Manage Users");
         titleLabel.setFont(HEADER_FONT);
         titleLabel.setForeground(TEXT_COLOR);
 
-//        logoutButton = createStyledButton("Logout");
-//        logoutButton.setPreferredSize(new Dimension(100, 30));
+        JLabel adminLabel = new JLabel("Admin Dashboard");
+        adminLabel.setFont(NORMAL_FONT);
+        adminLabel.setForeground(SECONDARY_COLOR);
 
-        topPanel.add(titleLabel, BorderLayout.CENTER);
-//        topPanel.add(logoutButton, BorderLayout.EAST);
+        topPanel.add(titleLabel, BorderLayout.WEST);
+        topPanel.add(adminLabel, BorderLayout.EAST);
     }
 
     private void createContentPanel() {
         contentPanel = new JPanel(new BorderLayout(0, 20));
         contentPanel.setBackground(BACKGROUND_COLOR);
 
-        JLabel userLabel = new JLabel("User Management");
-        userLabel.setFont(new Font("Segoe UI", Font.BOLD, 20));
-        userLabel.setForeground(TEXT_COLOR);
-        userLabel.setBorder(new EmptyBorder(0, 0, 10, 0));
+//        JLabel userLabel = new JLabel("User Management");
+//        userLabel.setFont(new Font("Segoe UI", Font.BOLD, 20));
+//        userLabel.setForeground(TEXT_COLOR);
+//        userLabel.setBorder(new EmptyBorder(0, 0, 10, 0));
 
         String[] columnNames = {"ID", "Name", "Phone Number", "Number of PetAdopted"};
         DefaultTableModel tableModel = new DefaultTableModel(columnNames, 0) {
@@ -89,6 +90,16 @@ public class UserManagementUI extends JFrame {
         };
 
         // Add sample data
+        tableModel.addRow(new Object[]{1, "Alice Smith", "123-456-7890", 5});
+        tableModel.addRow(new Object[]{2, "Bob Johnson", "987-654-3210", 3});
+        tableModel.addRow(new Object[]{3, "Charlie Davis", "555-123-4567", 8});
+        tableModel.addRow(new Object[]{4, "Diana Brown", "444-567-8901", 4});
+        tableModel.addRow(new Object[]{5, "Evan Lewis", "333-789-1234", 2});
+        tableModel.addRow(new Object[]{1, "Alice Smith", "123-456-7890", 5});
+        tableModel.addRow(new Object[]{2, "Bob Johnson", "987-654-3210", 3});
+        tableModel.addRow(new Object[]{3, "Charlie Davis", "555-123-4567", 8});
+        tableModel.addRow(new Object[]{4, "Diana Brown", "444-567-8901", 4});
+        tableModel.addRow(new Object[]{5, "Evan Lewis", "333-789-1234", 2});
         tableModel.addRow(new Object[]{1, "Alice Smith", "123-456-7890", 5});
         tableModel.addRow(new Object[]{2, "Bob Johnson", "987-654-3210", 3});
         tableModel.addRow(new Object[]{3, "Charlie Davis", "555-123-4567", 8});
@@ -127,6 +138,8 @@ public class UserManagementUI extends JFrame {
         header.setBackground(PRIMARY_COLOR);
         header.setForeground(Color.WHITE);
         header.setBorder(BorderFactory.createEmptyBorder());
+        header.setReorderingAllowed(false);
+        header.setResizingAllowed(false);
 
         // Center table content in each cell
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
@@ -137,10 +150,17 @@ public class UserManagementUI extends JFrame {
             userTable.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
         }
 
+        // Create a scroll pane for the table
         JScrollPane tableScrollPane = new JScrollPane(userTable);
         tableScrollPane.setBorder(BorderFactory.createEmptyBorder());
+        tableScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        tableScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 
-        contentPanel.add(userTable, BorderLayout.NORTH);
+        // Set preferred size for the scroll pane to control its height
+        tableScrollPane.setPreferredSize(new Dimension(900, 400));
+
+        // Add components to the content panel
+//        contentPanel.add(userLabel, BorderLayout.NORTH);
         contentPanel.add(tableScrollPane, BorderLayout.CENTER);
     }
 

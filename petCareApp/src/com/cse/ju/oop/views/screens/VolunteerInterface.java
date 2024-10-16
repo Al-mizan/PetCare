@@ -54,8 +54,8 @@ public class VolunteerInterface extends JFrame {
         sidebarPanel.add(logoLabel);
 
         sidebarPanel.add(Box.createRigidArea(new Dimension(0, 50)));
-
-        createMenuButton("Dashboard", sidebarPanel, e -> openDashboard());
+//        sidebarPanel.add(Box.createRigidArea(new Dimension(5, 20)));
+        createMenuButton("Dashboard", sidebarPanel, e -> {});
         createMenuButton("Add Pets", sidebarPanel, e -> openAddPets());
         createMenuButton("Show Pets", sidebarPanel, e -> openShowPets());
         createMenuButton("About Us", sidebarPanel, e -> openAboutUs());
@@ -159,33 +159,26 @@ public class VolunteerInterface extends JFrame {
         return card;
     }
 
-    private void openDashboard() {
-        // Placeholder for dashboard action
-        JOptionPane.showMessageDialog(this, "Opening Dashboard");
-    }
-
     private void openAddPets() {
-//        SwingUtilities.invokeLater(() -> {
-//            // Replace AddPetsScreen with your actual class name
-//            AddPetsScreen addPetsScreen = new AddPetsScreen();
-//            addPetsScreen.setVisible(true);
-//            dispose();
-//        });
+        SwingUtilities.invokeLater(() -> {
+            AddPetsUIVolunteer addPetsUIVolunteer = new AddPetsUIVolunteer();
+            addPetsUIVolunteer.setVisible(true);
+            dispose();
+        });
     }
 
     private void openShowPets() {
         SwingUtilities.invokeLater(() -> {
-            // Replace ShowPetsScreen with your actual class name
-            ShowPetsUI showPetsUI = new ShowPetsUI();
-            showPetsUI.setVisible(true);
+            ShowPetsUIVolunteer showPetsUIVolunteer = new ShowPetsUIVolunteer();
+            showPetsUIVolunteer.setVisible(true);
             dispose();
         });
     }
 
     private void openAboutUs() {
         SwingUtilities.invokeLater(() -> {
-            AboutUsPage aboutUs = new AboutUsPage();
-            aboutUs.setVisible(true);
+            AboutUsPageVolunteer aboutUsPageVolunteer = new AboutUsPageVolunteer();
+            aboutUsPageVolunteer.setVisible(true);
             dispose();
         });
     }
@@ -197,8 +190,8 @@ public class VolunteerInterface extends JFrame {
         if (confirm == JOptionPane.YES_OPTION) {
             // TODO: Implement actual logout logic
             System.out.println("Logout");
-            this.dispose();
             new LoginScreen().setVisible(true);
+            this.dispose();
         }
     }
 

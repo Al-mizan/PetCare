@@ -3,7 +3,7 @@ package petCareApp.src.com.cse.ju.oop.views.screens;
 import javax.swing.*;
 import java.awt.*;
 
-public class AboutUsPage extends JFrame {
+public class AboutUsPageUser extends JFrame {
     private static final int WINDOW_WIDTH = 1000;
     private static final int WINDOW_HEIGHT = 800;
     private static final int PADDING = 20;
@@ -11,7 +11,7 @@ public class AboutUsPage extends JFrame {
     private static final String FONT_FAMILY = "Arial";
     private static final Color TITLE_COLOR = new Color(34, 40, 49);
 
-    public AboutUsPage() {
+    public AboutUsPageUser() {
         initializeFrame();
         JPanel mainPanel = createMainPanel();
         add(mainPanel);
@@ -56,7 +56,7 @@ public class AboutUsPage extends JFrame {
         JButton backButton = new JButton("Back");
         backButton.setFont(new Font(FONT_FAMILY, Font.PLAIN, 14));
         backButton.addActionListener(e -> {
-            new AdminInterface();
+            new UserInterface();
             dispose();
         });
         return backButton;
@@ -118,8 +118,8 @@ public class AboutUsPage extends JFrame {
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-            AboutUsPage aboutUsPage = new AboutUsPage();
-            aboutUsPage.setVisible(true);
+            AboutUsPageUser aboutUsPageUser = new AboutUsPageUser();
+            aboutUsPageUser.setVisible(true);
         });
     }
 }

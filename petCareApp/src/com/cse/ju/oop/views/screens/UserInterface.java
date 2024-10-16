@@ -143,25 +143,25 @@ public class UserInterface extends JFrame {
     }
 
     private void openPetAdopt() {
-//        SwingUtilities.invokeLater(() -> {
-//            PetAdoptUI petAdoptUI = new PetAdoptUI();
-//            petAdoptUI.setVisible(true);
-//            dispose();
-//        });
+        SwingUtilities.invokeLater(() -> {
+            PetAdoptUIUser petAdoptUIUser = new PetAdoptUIUser();
+            petAdoptUIUser.setVisible(true);
+            dispose();
+        });
     }
 
     private void openAddPet() {
         SwingUtilities.invokeLater(() -> {
-            AddPetUI addPetUI = new AddPetUI();
-            addPetUI.setVisible(true);
+            AddPetUIUser addPetUIUser = new AddPetUIUser();
+            addPetUIUser.setVisible(true);
             dispose();
         });
     }
 
     private void showAboutUs() {
         SwingUtilities.invokeLater(() -> {
-            AboutUsPage aboutUs = new AboutUsPage(); /// create new window for userInterface
-            aboutUs.setVisible(true);
+            AboutUsPageUser aboutUsPageUser = new AboutUsPageUser(); /// create new window for userInterface
+            aboutUsPageUser.setVisible(true);
             dispose();
         });
     }

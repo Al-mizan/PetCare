@@ -4,7 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.sql.*;
 
-public class AddPetUI extends JFrame{
+public class AddPetsUIVolunteer extends JFrame{
     private JFrame frame;
     private JComboBox<String> petTypeComboBox;
     private JTextField petNameField;
@@ -14,7 +14,7 @@ public class AddPetUI extends JFrame{
     private static final String DB_USER = "your_username";
     private static final String DB_PASSWORD = "your_password";
 
-    public AddPetUI() {
+    public AddPetsUIVolunteer() {
         initializeUI();
     }
 
@@ -132,12 +132,12 @@ public class AddPetUI extends JFrame{
     private void goBack() {
         int confirm = JOptionPane.showConfirmDialog(this, "Are you sure you want to go back to the dashboard?", "Confirm Exit", JOptionPane.YES_NO_OPTION);
         if (confirm == JOptionPane.YES_OPTION) {
-            new UserInterface();
+            new VolunteerInterface();
             dispose();
         }
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(AddPetUI::new);
+        SwingUtilities.invokeLater(AddPetsUIVolunteer::new);
     }
 }

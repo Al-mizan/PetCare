@@ -156,16 +156,16 @@ public class AdminInterface extends JFrame {
 
     private void openPetManagement() {
         SwingUtilities.invokeLater(() -> {
-            ShowPetsUI showPetsUI = new ShowPetsUI();
-            showPetsUI.setVisible(true);
+            PetManagementUI petManagementUI = new PetManagementUI();
+            petManagementUI.setVisible(true);
             dispose();
         });
     }
 
     private void openVolunteerManagement() {
         SwingUtilities.invokeLater(() -> {
-            UserManagementUI userManagementUI = new UserManagementUI();
-            userManagementUI.setVisible(true);
+            VolunteerManagementUI volunteerManagementUI = new VolunteerManagementUI();
+            volunteerManagementUI.setVisible(true);
             dispose();
         });
     }
@@ -180,8 +180,8 @@ public class AdminInterface extends JFrame {
 
     private void showAboutUs() {
         SwingUtilities.invokeLater(() -> {
-            AboutUsPage aboutUs = new AboutUsPage();
-            aboutUs.setVisible(true);
+            AboutUsPageAdmin aboutUsPageAdmin = new AboutUsPageAdmin();
+            aboutUsPageAdmin.setVisible(true);
             dispose();
         });
     }
