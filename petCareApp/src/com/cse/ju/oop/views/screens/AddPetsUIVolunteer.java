@@ -12,7 +12,7 @@ public class AddPetsUIVolunteer extends JFrame {
     private JPanel sidebarPanel, mainPanel, headerPanel, contentPanel;
     private JButton logoutButton;
     private JComboBox<String> petTypeComboBox;
-    private JTextField petNameField, petSpeciesField, petAgeField;
+    private JTextField petNameField, petSpeciesField, petAgeYearsField, petAgeMonthsField;
 
     private static final String DB_URL = "jdbc:mysql://localhost:3306/petcare_db";
     private static final String DB_USER = "your_username";
@@ -137,14 +137,51 @@ public class AddPetsUIVolunteer extends JFrame {
         petTypeComboBox = new JComboBox<>(petTypes);
         petNameField = new JTextField(15);
         petSpeciesField = new JTextField(15);
-        petAgeField = new JTextField(15);
+        petAgeYearsField = new JTextField(5);
+        petAgeMonthsField = new JTextField(5);
 
         addFormField(formPanel, gbc, "Pet Type:", petTypeComboBox, 0);
         addFormField(formPanel, gbc, "Pet Name:", petNameField, 1);
         addFormField(formPanel, gbc, "Pet Species:", petSpeciesField, 2);
-        addFormField(formPanel, gbc, "Pet Age:", petAgeField, 3);
+        addAgeFields(formPanel, gbc, 3);
 
         return formPanel;
+    }
+
+    private void addAgeFields(JPanel panel, GridBagConstraints gbc, int gridy) {
+        JLabel ageLabel = new JLabel("Pet Age:");
+        ageLabel.setFont(NORMAL_FONT);
+        ageLabel.setForeground(TEXT_COLOR);
+
+        gbc.gridx = 0;
+        gbc.gridy = gridy;
+        gbc.anchor = GridBagConstraints.WEST;
+        panel.add(ageLabel, gbc);
+
+        JPanel agePanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 0));
+        agePanel.setOpaque(false);
+
+        petAgeYearsField.setFont(NORMAL_FONT);
+        petAgeMonthsField.setFont(NORMAL_FONT);
+
+        agePanel.add(createLabeledField(petAgeYearsField, "Years"));
+        agePanel.add(createLabeledField(petAgeMonthsField, "Months"));
+
+        gbc.gridx = 1;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        panel.add(agePanel, gbc);
+    }
+
+    private JPanel createLabeledField(JTextField field, String labelText) {
+        JPanel panel = new JPanel(new BorderLayout(5, 0));
+        panel.setOpaque(false);
+        field.setColumns(5);
+        panel.add(field, BorderLayout.CENTER);
+        JLabel label = new JLabel(labelText);
+        label.setFont(NORMAL_FONT.deriveFont(Font.PLAIN, 14));
+        label.setForeground(TEXT_COLOR);
+        panel.add(label, BorderLayout.EAST);
+        return panel;
     }
 
     private void addFormField(JPanel panel, GridBagConstraints gbc, String labelText, JComponent component, int gridy) {
@@ -236,18 +273,41 @@ public class AddPetsUIVolunteer extends JFrame {
         return button;
     }
 
+    private boolean validateInput() {
+        if (petNameField.getText().trim().isEmpty() || petSpeciesField.getText().trim().isEmpty() ||
+                (petAgeYearsField.getText().trim().isEmpty() && petAgeMonthsField.getText().trim().isEmpty())) {
+            JOptionPane.showMessageDialog(this, "Please fill all fields", "Input Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
+        try {
+            int years = petAgeYearsField.getText().trim().isEmpty() ? 0 : Integer.parseInt(petAgeYearsField.getText().trim());
+            int months = petAgeMonthsField.getText().trim().isEmpty() ? 0 : Integer.parseInt(petAgeMonthsField.getText().trim());
+
+            if (years < 0 || years > 100 || months < 0 || months > 11) {
+                throw new NumberFormatException();
+            }
+        } catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(this, "Please enter a valid age (0-100 years, 0-11 months)", "Input Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
+        return true;
+    }
+
     private void addPet() {
         if (!validateInput()) {
             return;
         }
 
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
-            String sql = "INSERT INTO pets (type, name, species, age) VALUES (?, ?, ?, ?)";
+            String sql = "INSERT INTO pets (type, name, species, age_years, age_months) VALUES (?, ?, ?, ?, ?)";
             try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
                 pstmt.setString(1, (String) petTypeComboBox.getSelectedItem());
                 pstmt.setString(2, petNameField.getText().trim());
                 pstmt.setString(3, petSpeciesField.getText().trim());
-                pstmt.setInt(4, Integer.parseInt(petAgeField.getText().trim()));
+                pstmt.setInt(4, Integer.parseInt(petAgeYearsField.getText().trim()));
+                pstmt.setInt(5, Integer.parseInt(petAgeMonthsField.getText().trim()));
                 pstmt.executeUpdate();
             }
             JOptionPane.showMessageDialog(this, "Pet added successfully", "Success", JOptionPane.INFORMATION_MESSAGE);
@@ -258,30 +318,12 @@ public class AddPetsUIVolunteer extends JFrame {
         }
     }
 
-    private boolean validateInput() {
-        if (petNameField.getText().trim().isEmpty() || petSpeciesField.getText().trim().isEmpty() || petAgeField.getText().trim().isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Please fill all fields", "Input Error", JOptionPane.ERROR_MESSAGE);
-            return false;
-        }
-
-        try {
-            int age = Integer.parseInt(petAgeField.getText().trim());
-            if (age < 0 || age > 100) {
-                throw new NumberFormatException();
-            }
-        } catch (NumberFormatException ex) {
-            JOptionPane.showMessageDialog(this, "Please enter a valid age (0-100)", "Input Error", JOptionPane.ERROR_MESSAGE);
-            return false;
-        }
-
-        return true;
-    }
-
     private void clearFields() {
         petTypeComboBox.setSelectedIndex(0);
         petNameField.setText("");
         petSpeciesField.setText("");
-        petAgeField.setText("");
+        petAgeYearsField.setText("");
+        petAgeMonthsField.setText("");
     }
 
     private void handleLogout() {
