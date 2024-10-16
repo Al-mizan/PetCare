@@ -60,7 +60,7 @@ public class PetManagementUI extends JFrame {
                 new EmptyBorder(15, 20, 15, 20)
         ));
 
-        JLabel titleLabel = new JLabel("Manage Pets");
+        JLabel titleLabel = new JLabel("Pets Management");
         titleLabel.setFont(HEADER_FONT);
         titleLabel.setForeground(TEXT_COLOR);
 

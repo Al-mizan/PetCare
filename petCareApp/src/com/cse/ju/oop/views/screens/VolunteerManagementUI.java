@@ -60,7 +60,7 @@ public class VolunteerManagementUI extends JFrame {
                 new EmptyBorder(15, 20, 15, 20)
         ));
 
-        JLabel titleLabel = new JLabel("Manage Volunteers");
+        JLabel titleLabel = new JLabel("Volunteers Management");
         titleLabel.setFont(HEADER_FONT);
         titleLabel.setForeground(TEXT_COLOR);
 

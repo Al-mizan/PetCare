@@ -60,7 +60,7 @@ public class UserManagementUI extends JFrame {
                 new EmptyBorder(15, 20, 15, 20)
         ));
 
-        JLabel titleLabel = new JLabel("Manage Users");
+        JLabel titleLabel = new JLabel("Users Management");
         titleLabel.setFont(HEADER_FONT);
         titleLabel.setForeground(TEXT_COLOR);
 

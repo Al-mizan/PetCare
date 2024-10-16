@@ -25,7 +25,7 @@ public class UserInterface extends JFrame {
     }
 
     private void initializeFrame() {
-        setTitle("PetCare Volunteer Dashboard");
+        setTitle("PetCare User Dashboard");
         setSize(1000, 800);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
