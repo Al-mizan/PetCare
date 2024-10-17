@@ -3,6 +3,7 @@ package petCareApp.src.com.cse.ju.oop.views.screens;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.sql.*;
 
 public class LoginScreen extends JFrame {
     private JTextField userText;
@@ -11,6 +12,12 @@ public class LoginScreen extends JFrame {
     private JPanel leftPanel, rightPanel;
     private JLabel logoLabel, welcomeLabel;
     private JButton loginButton, signUpButton;
+
+    // Database connection details
+    private static final String DB_URL = "jdbc:mysql://localhost:3306/petCare_db";
+    private static final String DB_USER = "root";
+    private static final String DB_PASSWORD = "mysql@1234";
+    public static int ID = -1;
 
     public LoginScreen() {
         setTitle("Pet Care Login");
@@ -122,7 +129,14 @@ public class LoginScreen extends JFrame {
         rightPanel.add(signUpButton, gbc);
 
         // Event listeners
-        loginButton.addActionListener(e -> handleLogin());
+        loginButton.addActionListener(e -> {
+            try {
+                handleLogin();
+            } catch (ClassNotFoundException ex) {
+//                throw new RuntimeException(ex);
+                JOptionPane.showMessageDialog(null, "An error occurred: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        });
         signUpButton.addActionListener(e -> openSignUpWindow());
     }
 
@@ -189,41 +203,76 @@ public class LoginScreen extends JFrame {
         });
     }
 
-    private void handleLogin() {
+    private void handleLogin() throws ClassNotFoundException {
         String username = userText.getText();
         String password = new String(passText.getPassword());
         String selectedRole = (String) roleComboBox.getSelectedItem();
 
-        // Here you would typically validate the username and password
-        // For this example, we'll just check if the Admin role is selected
-        if ("Admin".equals(selectedRole)) {
-            // Open the AdminInterface
-            try {
-                openAdminInterfaceWindow();
-            } catch (Exception e) {
-                e.printStackTrace();
-                JOptionPane.showMessageDialog(this, "Error opening AdminInterface: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-            }
+        // Validate input fields
+        if (username.isEmpty() || password.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Please fill in all fields.", "Login Error", JOptionPane.ERROR_MESSAGE);
+            return;
         }
-        else if("Volunteer".equals(selectedRole)) {
-            try {
-                openVolunteerInterfaceWindow();
-            } catch (Exception e) {
-                e.printStackTrace();
-                JOptionPane.showMessageDialog(this, "Error opening AdminInterface: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+
+        if (authenticateUser(username, password, selectedRole)) {
+            switch (selectedRole) {
+                case "Admin":
+                    try {
+                        openAdminInterfaceWindow();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        JOptionPane.showMessageDialog(this, "Error opening AdminInterface: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                    }
+                    break;
+                case "User":
+                    try {
+                        openUserInterfaceWindow();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        JOptionPane.showMessageDialog(this, "Error opening AdminInterface: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                    }
+                    break;
+                case "Volunteer":
+                    try {
+                        openVolunteerInterfaceWindow();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        JOptionPane.showMessageDialog(this, "Error opening AdminInterface: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                    }
+                    break;
+                default:
+                    JOptionPane.showMessageDialog(this, "Invalid role selected.", "Login Error", JOptionPane.ERROR_MESSAGE);
             }
+        } else {
+            JOptionPane.showMessageDialog(this, "Invalid username or password for the selected role.", "Login Error", JOptionPane.ERROR_MESSAGE);
         }
-        else if("User".equals(selectedRole)) {
-            try {
-                openUserInterfaceWindow();
-            } catch (Exception e) {
-                e.printStackTrace();
-                JOptionPane.showMessageDialog(this, "Error opening AdminInterface: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+    }
+
+    private boolean authenticateUser(String username, String password, String role) throws ClassNotFoundException {
+        String tableName = role.toLowerCase() + "s"; // Assumes tables are named: admins, users, volunteers
+        String query = "SELECT * FROM " + tableName + " WHERE username = ? AND password = ?";
+
+        Class.forName("com.mysql.cj.jdbc.Driver");
+
+        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            System.out.println("Successfully go into mysql");
+            pstmt.setString(1, username);
+            pstmt.setString(2, password); // Note: In a real application, you should use hashed passwords
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+
+                if (rs.next()) {
+                    ID = rs.getInt("id");
+                    return true;
+                }
+                return false;
             }
-        }
-        else {
-            // Handle other roles or show an error message
-            JOptionPane.showMessageDialog(this, "Login functionality not implemented for " + selectedRole + " role.", "Login Error", JOptionPane.ERROR_MESSAGE);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Database error: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
         }
     }
 
@@ -276,6 +325,7 @@ public class LoginScreen extends JFrame {
     }
 
     public static void main(String[] args) {
+
         SwingUtilities.invokeLater(LoginScreen::new);
     }
 }

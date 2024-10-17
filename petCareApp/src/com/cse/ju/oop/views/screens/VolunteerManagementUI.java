@@ -8,11 +8,12 @@ import javax.swing.table.JTableHeader;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.*;
 
 public class VolunteerManagementUI extends JFrame {
     private JPanel mainPanel, topPanel, contentPanel, bottomPanel;
     private JTable volunteerTable;
-    private JButton editButton, saveButton, backButton, logoutButton;
+    private JButton deleteButton, backButton;
     private final Color PRIMARY_COLOR = new Color(41, 128, 185);
     private final Color SECONDARY_COLOR = new Color(52, 152, 219);
     private final Color BACKGROUND_COLOR = new Color(236, 240, 241);
@@ -24,6 +25,7 @@ public class VolunteerManagementUI extends JFrame {
     public VolunteerManagementUI() {
         initializeFrame();
         createPanels();
+        loadVolunteerData();
         setVisible(true);
     }
 
@@ -76,12 +78,7 @@ public class VolunteerManagementUI extends JFrame {
         contentPanel = new JPanel(new BorderLayout(0, 20));
         contentPanel.setBackground(BACKGROUND_COLOR);
 
-//        JLabel volunteerLabel = new JLabel("Volunteer Management");
-//        volunteerLabel.setFont(new Font("Segoe UI", Font.BOLD, 20));
-//        volunteerLabel.setForeground(TEXT_COLOR);
-//        volunteerLabel.setBorder(new EmptyBorder(0, 0, 10, 0));
-
-        String[] columnNames = {"ID", "Name", "Phone Number", "Number of Rescues"};
+        String[] columnNames = {"ID", "Username", "Name", "Gender", "Phone", "Email", "PetsRescued"};
         DefaultTableModel tableModel = new DefaultTableModel(columnNames, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -89,34 +86,7 @@ public class VolunteerManagementUI extends JFrame {
             }
         };
 
-        // Add sample data
-        tableModel.addRow(new Object[]{1, "Alice Smith", "123-456-7890", 5});
-        tableModel.addRow(new Object[]{2, "Bob Johnson", "987-654-3210", 3});
-        tableModel.addRow(new Object[]{3, "Charlie Davis", "555-123-4567", 8});
-        tableModel.addRow(new Object[]{4, "Diana Brown", "444-567-8901", 4});
-        tableModel.addRow(new Object[]{5, "Evan Lewis", "333-789-1234", 2});
-        tableModel.addRow(new Object[]{1, "Alice Smith", "123-456-7890", 5});
-        tableModel.addRow(new Object[]{2, "Bob Johnson", "987-654-3210", 3});
-        tableModel.addRow(new Object[]{3, "Charlie Davis", "555-123-4567", 8});
-        tableModel.addRow(new Object[]{4, "Diana Brown", "444-567-8901", 4});
-        tableModel.addRow(new Object[]{5, "Evan Lewis", "333-789-1234", 2});
-        tableModel.addRow(new Object[]{1, "Alice Smith", "123-456-7890", 5});
-        tableModel.addRow(new Object[]{2, "Bob Johnson", "987-654-3210", 3});
-        tableModel.addRow(new Object[]{3, "Charlie Davis", "555-123-4567", 8});
-        tableModel.addRow(new Object[]{4, "Diana Brown", "444-567-8901", 4});
-        tableModel.addRow(new Object[]{5, "Evan Lewis", "333-789-1234", 2});
-        tableModel.addRow(new Object[]{1, "Alice Smith", "123-456-7890", 5});
-        tableModel.addRow(new Object[]{2, "Bob Johnson", "987-654-3210", 3});
-        tableModel.addRow(new Object[]{3, "Charlie Davis", "555-123-4567", 8});
-        tableModel.addRow(new Object[]{4, "Diana Brown", "444-567-8901", 4});
-        tableModel.addRow(new Object[]{5, "Evan Lewis", "333-789-1234", 2});
-        tableModel.addRow(new Object[]{1, "Alice Smith", "123-456-7890", 5});
-        tableModel.addRow(new Object[]{2, "Bob Johnson", "987-654-3210", 3});
-        tableModel.addRow(new Object[]{3, "Charlie Davis", "555-123-4567", 8});
-        tableModel.addRow(new Object[]{4, "Diana Brown", "444-567-8901", 4});
-        tableModel.addRow(new Object[]{5, "Evan Lewis", "333-789-1234", 2});
-
-        volunteerTable = new JTable(tableModel); /////
+        volunteerTable = new JTable(tableModel);
         volunteerTable.setFont(NORMAL_FONT);
         volunteerTable.setRowHeight(30);
         volunteerTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -129,11 +99,9 @@ public class VolunteerManagementUI extends JFrame {
         header.setForeground(Color.WHITE);
         header.setBorder(BorderFactory.createEmptyBorder());
 
-        // Center table content in each cell
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment(JLabel.CENTER);
 
-        // Apply the renderer to each column
         for (int i = 0; i < volunteerTable.getColumnCount(); i++) {
             volunteerTable.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
         }
@@ -141,7 +109,6 @@ public class VolunteerManagementUI extends JFrame {
         JScrollPane tableScrollPane = new JScrollPane(volunteerTable);
         tableScrollPane.setBorder(BorderFactory.createEmptyBorder());
 
-//        contentPanel.add(volunteerLabel, BorderLayout.NORTH);
         contentPanel.add(tableScrollPane, BorderLayout.CENTER);
     }
 
@@ -149,14 +116,13 @@ public class VolunteerManagementUI extends JFrame {
         bottomPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 0));
         bottomPanel.setBackground(BACKGROUND_COLOR);
 
-        editButton = createStyledButton("Edit");
+        deleteButton = createStyledButton("Delete");
         backButton = createStyledButton("Back");
 
-        editButton.addActionListener(e -> editVolunteer());
+        deleteButton.addActionListener(e -> deleteVolunteer());
         backButton.addActionListener(e -> backToDashboard());
 
-        bottomPanel.add(editButton);
-//        bottomPanel.add(saveButton);
+        bottomPanel.add(deleteButton);
         bottomPanel.add(backButton);
     }
 
@@ -185,13 +151,73 @@ public class VolunteerManagementUI extends JFrame {
         return button;
     }
 
-    private void editVolunteer() {
+    private void loadVolunteerData() {
+        DefaultTableModel model = (DefaultTableModel) volunteerTable.getModel();
+        model.setRowCount(0); // Clear existing data
+
+        String url = "jdbc:mysql://localhost:3306/petCare_db";
+        String user = "root";
+        String password = "mysql@1234";
+
+        try (Connection conn = DriverManager.getConnection(url, user, password);
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery("SELECT id, username, firstname, gender, phone, email, pets_rescued FROM volunteers")) {
+
+            while (rs.next()) {
+                Object[] row = {
+                        rs.getInt("id"),
+                        rs.getString("username"),
+                        rs.getString("firstname"),
+                        rs.getString("gender"),
+                        rs.getString("phone"),
+                        rs.getString("email"),
+                        rs.getInt("pets_rescued")
+                };
+                model.addRow(row);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error loading volunteer data: " + e.getMessage(), "Database Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void deleteVolunteer() {
         int selectedRow = volunteerTable.getSelectedRow();
         if (selectedRow != -1) {
-            String petName = (String) volunteerTable.getValueAt(selectedRow, 1);
-            JOptionPane.showMessageDialog(this, "Edit Pet functionality for " + petName + " will be implemented here.", "Edit Pet", JOptionPane.INFORMATION_MESSAGE);
+            int volunteerId = (int) volunteerTable.getValueAt(selectedRow, 0);
+            String volunteerName = (String) volunteerTable.getValueAt(selectedRow, 2);
+
+            int confirm = JOptionPane.showConfirmDialog(this,
+                    "Are you sure you want to delete volunteer " + volunteerName + " (ID: " + volunteerId + ")?",
+                    "Confirm Deletion", JOptionPane.YES_NO_OPTION);
+
+            if (confirm == JOptionPane.YES_OPTION) {
+                if (deleteVolunteerFromDatabase(volunteerId)) {
+                    ((DefaultTableModel) volunteerTable.getModel()).removeRow(selectedRow);
+                    JOptionPane.showMessageDialog(this, "Volunteer deleted successfully.", "Deletion Successful", JOptionPane.INFORMATION_MESSAGE);
+                } else {
+                    JOptionPane.showMessageDialog(this, "Failed to delete volunteer from the database.", "Deletion Failed", JOptionPane.ERROR_MESSAGE);
+                }
+            }
         } else {
-            JOptionPane.showMessageDialog(this, "Please select a pet to edit.", "No Pet Selected", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Please select a volunteer to delete.", "No Volunteer Selected", JOptionPane.WARNING_MESSAGE);
+        }
+    }
+
+    private boolean deleteVolunteerFromDatabase(int volunteerId) {
+        String url = "jdbc:mysql://localhost:3306/petCare_db";
+        String user = "root";
+        String password = "mysql@1234";
+
+        try (Connection conn = DriverManager.getConnection(url, user, password);
+             PreparedStatement pstmt = conn.prepareStatement("DELETE FROM volunteers WHERE id = ?")) {
+
+            pstmt.setInt(1, volunteerId);
+            int affectedRows = pstmt.executeUpdate();
+            return affectedRows > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
         }
     }
 
@@ -202,8 +228,6 @@ public class VolunteerManagementUI extends JFrame {
             dispose();
         }
     }
-
-    // TODO: Implement action listeners for buttons
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
