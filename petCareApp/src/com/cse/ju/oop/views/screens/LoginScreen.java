@@ -64,14 +64,6 @@ public class LoginScreen extends JFrame {
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(10, 10, 10, 10);
 
-        // Left panel components
-//        ImageIcon logoIcon = new ImageIcon(getClass().getResource("/path/to/your/logo.png")); // Update path
-//        Image img = logoIcon.getImage().getScaledInstance(150, 150, Image.SCALE_SMOOTH);
-//        logoLabel = new JLabel(new ImageIcon(img));
-//        gbc.gridx = 0;
-//        gbc.gridy = 0;
-//        leftPanel.add(logoLabel, gbc);
-
         JLabel brandLabel = new JLabel("PetCare");
         brandLabel.setFont(new Font("Arial", Font.BOLD, 40));
         brandLabel.setForeground(Color.WHITE);
@@ -133,7 +125,6 @@ public class LoginScreen extends JFrame {
             try {
                 handleLogin();
             } catch (ClassNotFoundException ex) {
-//                throw new RuntimeException(ex);
                 JOptionPane.showMessageDialog(null, "An error occurred: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             }
         });

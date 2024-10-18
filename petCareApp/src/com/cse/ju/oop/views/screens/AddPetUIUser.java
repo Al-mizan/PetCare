@@ -295,29 +295,6 @@ public class AddPetUIUser extends JFrame {
 
         return true;
     }
-//
-//    private void addPet() {
-//        if (!validateInput()) {
-//            return;
-//        }
-//
-//        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
-//            String sql = "INSERT INTO pets (type, name, species, age_years, age_months) VALUES (?, ?, ?, ?, ?)";
-//            try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
-//                pstmt.setString(1, (String) petTypeComboBox.getSelectedItem());
-//                pstmt.setString(2, petNameField.getText().trim());
-//                pstmt.setString(3, petSpeciesField.getText().trim());
-//                pstmt.setInt(4, Integer.parseInt(petAgeYearsField.getText().trim()));
-//                pstmt.setInt(5, Integer.parseInt(petAgeMonthsField.getText().trim()));
-//                pstmt.executeUpdate();
-//            }
-//            JOptionPane.showMessageDialog(this, "Pet added successfully", "Success", JOptionPane.INFORMATION_MESSAGE);
-//            clearFields();
-//        } catch (SQLException ex) {
-//            ex.printStackTrace();
-//            JOptionPane.showMessageDialog(this, "Error adding pet to database", "Database Error", JOptionPane.ERROR_MESSAGE);
-//        }
-//    }
 
     private void addPet() {
         if (!validateInput()) {

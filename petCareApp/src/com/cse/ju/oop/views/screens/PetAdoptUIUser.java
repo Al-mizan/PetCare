@@ -240,7 +240,6 @@ public class PetAdoptUIUser extends JFrame {
         }
         panel.add(Box.createRigidArea(new Dimension(0, 20)));
 
-        // Set "All" as default selected
         group.getElements().nextElement().setSelected(true);
     }
 
