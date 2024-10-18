@@ -2,11 +2,19 @@ package petCareApp.src.com.cse.ju.oop.views.screens;
 
 import javax.swing.*;
 import java.awt.*;
+import java.sql.*;
 
 public class RegistrationScreen extends JFrame {
-    private JTextField firstNameField, lastNameField, userNameField, passwordField, phoneField, emailField;
+    private JTextField firstNameField, lastNameField, userNameField, phoneField, emailField;
     private JComboBox<String> genderComboBox, roleComboBox;
     private JButton signUpButton, backButton;
+    private JPasswordField passwordField;
+
+    // Database connection details
+    private static final String DB_URL = "jdbc:mysql://localhost:3306/petCare_db";
+    private static final String DB_USER = "root";
+    private static final String DB_PASSWORD = "mysql@1234";
+    public static int ID = -1;
 
     public RegistrationScreen() {
         setTitle("Pet Care - Sign Up");
@@ -72,7 +80,7 @@ public class RegistrationScreen extends JFrame {
         add(mainPanel);
         setVisible(true);
 
-        signUpButton.addActionListener(e -> handleLogin());
+        signUpButton.addActionListener(e -> handleRegistration());
         backButton.addActionListener(e -> openSignInWindow());
     }
 
@@ -119,6 +127,7 @@ public class RegistrationScreen extends JFrame {
         panel.add(field, gbc);
     }
 
+<<<<<<< HEAD
     private void handleLogin() {
         String selectedRole = (String) roleComboBox.getSelectedItem();
 
@@ -145,6 +154,84 @@ public class RegistrationScreen extends JFrame {
             }
         } else {
             JOptionPane.showMessageDialog(this, "Login functionality not implemented for " + selectedRole + " role.", "Login Error", JOptionPane.ERROR_MESSAGE);
+=======
+    private void handleRegistration() {
+        String firstName = firstNameField.getText();
+        String lastName = lastNameField.getText();
+        String gender = (String) genderComboBox.getSelectedItem();
+        String userName = userNameField.getText();
+        String phone = phoneField.getText();
+        String email = emailField.getText();
+        String password = new String(passwordField.getPassword());
+        String selectedRole = (String) roleComboBox.getSelectedItem();
+
+        // Validate input fields
+        if (firstName.isEmpty() || lastName.isEmpty() || userName.isEmpty() || password.isEmpty() || phone.isEmpty() || email.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Please fill in all fields.", "Registration Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // Insert data into the appropriate table based on the selected role
+        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
+            assert selectedRole != null;
+            String tableName = getTableNameForRole(selectedRole);
+            String sql = "INSERT INTO " + tableName + " (username, firstname, surname, gender, phone, email, password) VALUES (?, ?, ?, ?, ?, ?, ?)";
+
+            try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                pstmt.setString(1, userName);
+                pstmt.setString(2, firstName);
+                pstmt.setString(3, lastName);
+                pstmt.setString(4, gender);
+                pstmt.setString(5, phone);
+                pstmt.setString(6, email);
+                pstmt.setString(7, password);
+
+                int rowsAffected = pstmt.executeUpdate();
+                if (rowsAffected > 0) {
+                    LoginScreen.authenticateUserRegistration(userName, password, selectedRole);
+                    openAppropriateInterface(selectedRole);
+                } else {
+                    JOptionPane.showMessageDialog(this, "Registration failed. Please try again.", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            } catch (ClassNotFoundException e) {
+                throw new RuntimeException(e);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Database error: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    ///////////
+
+    private String getTableNameForRole(String role) {
+        switch (role.toLowerCase()) {
+            case "admin":
+                return "admins";
+            case "volunteer":
+                return "volunteers";
+            case "user":
+                return "users";
+            default:
+                throw new IllegalArgumentException("Invalid role: " + role);
+        }
+    }
+
+    private void openAppropriateInterface(String role) {
+        switch (role.toLowerCase()) {
+            case "admin":
+                openAdminInterfaceWindow();
+                break;
+            case "volunteer":
+                openVolunteerInterfaceWindow();
+                break;
+            case "user":
+                openUserInterfaceWindow();
+                break;
+            default:
+                JOptionPane.showMessageDialog(this, "Invalid role selected.", "Error", JOptionPane.ERROR_MESSAGE);
+>>>>>>> 86e0245188d2863aaf900ffd976a5e65dccb7bf8
         }
     }
 
@@ -164,7 +251,12 @@ public class RegistrationScreen extends JFrame {
     private void openUserInterfaceWindow() {
         SwingUtilities.invokeLater(() -> {
             try {
+<<<<<<< HEAD
                 UserInterface userInterface = new UserInterface();
+=======
+                System.out.println("Attempting to open AdminInterface");
+                UserInterface userInterface = new UserInterface(); ///////////////////////////////////
+>>>>>>> 86e0245188d2863aaf900ffd976a5e65dccb7bf8
                 userInterface.setVisible(true);
                 this.dispose();
             } catch (Exception e) {

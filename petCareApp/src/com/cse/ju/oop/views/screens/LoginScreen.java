@@ -3,6 +3,7 @@ package petCareApp.src.com.cse.ju.oop.views.screens;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.sql.*;
 
 public class LoginScreen extends JFrame {
     private JTextField userText;
@@ -11,6 +12,12 @@ public class LoginScreen extends JFrame {
     private JPanel leftPanel, rightPanel;
     private JLabel logoLabel, welcomeLabel;
     private JButton loginButton, signUpButton;
+
+    // Database connection details
+    private static final String DB_URL = "jdbc:mysql://localhost:3306/petCare_db";
+    private static final String DB_USER = "root";
+    private static final String DB_PASSWORD = "mysql@1234";
+    public static int ID = -1;
 
     public LoginScreen() {
         setTitle("Login");
@@ -57,6 +64,7 @@ public class LoginScreen extends JFrame {
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(10, 10, 10, 10);
 
+<<<<<<< HEAD
         // Left panel components
         try {
             ImageIcon logoIcon = new ImageIcon("C:\\Users\\HP\\Downloads\\logo.png"); // Update with the correct logo path
@@ -69,6 +77,19 @@ public class LoginScreen extends JFrame {
             e.printStackTrace();
             System.out.println("Failed to load the logo.");
         }
+=======
+        JLabel brandLabel = new JLabel("PetCare");
+        brandLabel.setFont(new Font("Arial", Font.BOLD, 40));
+        brandLabel.setForeground(Color.WHITE);
+        gbc.gridy = 1;
+        leftPanel.add(brandLabel, gbc);
+
+        JLabel sloganLabel = new JLabel("Care for your furry friends");
+        sloganLabel.setFont(new Font("Arial", Font.ITALIC, 18));
+        sloganLabel.setForeground(Color.WHITE);
+        gbc.gridy = 2;
+        leftPanel.add(sloganLabel, gbc);
+>>>>>>> 86e0245188d2863aaf900ffd976a5e65dccb7bf8
 
         // Right panel components
         welcomeLabel = new JLabel("Welcome Back!");
@@ -115,7 +136,13 @@ public class LoginScreen extends JFrame {
         rightPanel.add(signUpButton, gbc);
 
         // Event listeners
-        loginButton.addActionListener(e -> handleLogin());
+        loginButton.addActionListener(e -> {
+            try {
+                handleLogin();
+            } catch (ClassNotFoundException ex) {
+                JOptionPane.showMessageDialog(null, "An error occurred: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        });
         signUpButton.addActionListener(e -> openSignUpWindow());
     }
 
@@ -182,11 +209,37 @@ public class LoginScreen extends JFrame {
         });
     }
 
-    private void handleLogin() {
+    public static void authenticateUserRegistration(String username, String password, String role) throws ClassNotFoundException {
+        String tableName = role.toLowerCase() + "s"; // Assumes tables are named: admins, users, volunteers
+        String query = "SELECT * FROM " + tableName + " WHERE username = ? AND password = ?";
+
+        Class.forName("com.mysql.cj.jdbc.Driver");
+
+        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+             PreparedStatement pstmt1 = conn.prepareStatement(query)) {
+            System.out.println("Successfully go into mysql");
+            pstmt1.setString(1, username);
+            pstmt1.setString(2, password); // Note: In a real application, you should use hashed passwords
+
+            try (ResultSet rs = pstmt1.executeQuery()) {
+
+                if (rs.next()) {
+                    ID = rs.getInt("id");
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Database error: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void handleLogin() throws ClassNotFoundException {
         String username = userText.getText();
         String password = new String(passText.getPassword());
         String selectedRole = (String) roleComboBox.getSelectedItem();
 
+<<<<<<< HEAD
         // Here you would typically validate the username and password
         // For this example, we'll just check if the Admin role is selected
         if ("Admin".equals(selectedRole)) {
@@ -200,6 +253,73 @@ public class LoginScreen extends JFrame {
         }
         else {
             JOptionPane.showMessageDialog(this, "Login functionality not implemented for " + selectedRole + " role.", "Login Error", JOptionPane.ERROR_MESSAGE);
+=======
+        // Validate input fields
+        if (username.isEmpty() || password.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Please fill in all fields.", "Login Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        if (authenticateUser(username, password, selectedRole)) {
+            switch (selectedRole) {
+                case "Admin":
+                    try {
+                        openAdminInterfaceWindow();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        JOptionPane.showMessageDialog(this, "Error opening AdminInterface: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                    }
+                    break;
+                case "User":
+                    try {
+                        openUserInterfaceWindow();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        JOptionPane.showMessageDialog(this, "Error opening AdminInterface: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                    }
+                    break;
+                case "Volunteer":
+                    try {
+                        openVolunteerInterfaceWindow();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        JOptionPane.showMessageDialog(this, "Error opening AdminInterface: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                    }
+                    break;
+                default:
+                    JOptionPane.showMessageDialog(this, "Invalid role selected.", "Login Error", JOptionPane.ERROR_MESSAGE);
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Invalid username or password for the selected role.", "Login Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private boolean authenticateUser(String username, String password, String role) throws ClassNotFoundException {
+        String tableName = role.toLowerCase() + "s"; // Assumes tables are named: admins, users, volunteers
+        String query = "SELECT * FROM " + tableName + " WHERE username = ? AND password = ?";
+
+        Class.forName("com.mysql.cj.jdbc.Driver");
+
+        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            System.out.println("Successfully go into mysql");
+            pstmt.setString(1, username);
+            pstmt.setString(2, password); // Note: In a real application, you should use hashed passwords
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+
+                if (rs.next()) {
+                    ID = rs.getInt("id");
+                    return true;
+                }
+                return false;
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Database error: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+>>>>>>> 86e0245188d2863aaf900ffd976a5e65dccb7bf8
         }
     }
 
@@ -233,6 +353,7 @@ public class LoginScreen extends JFrame {
     }
 
     public static void main(String[] args) {
+
         SwingUtilities.invokeLater(LoginScreen::new);
     }
 }

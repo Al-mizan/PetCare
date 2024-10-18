@@ -2,23 +2,23 @@ package petCareApp.src.com.cse.ju.oop.views.screens;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.sql.*;
 import javax.swing.border.TitledBorder;
+import java.util.ArrayList;
+import java.util.List;
 
 public class PetAdoptUIUser extends JFrame {
-    private JPanel sidebarPanel, mainPanel, headerPanel, contentPanel;
+    private JPanel leftPanel, rightPanel, filterPanel, tablePanel, buttonPanel;
     private JTable petTable;
     private DefaultTableModel tableModel;
-    private JComboBox<String> sortByComboBox;
-    private JButton backButton;
+    private JButton backButton, adoptButton;
 
     private final Color PRIMARY_COLOR = new Color(65, 105, 225);
     private final Color SECONDARY_COLOR = new Color(52, 152, 219);
@@ -28,9 +28,18 @@ public class PetAdoptUIUser extends JFrame {
     private final Font NORMAL_FONT = new Font("Segoe UI", Font.PLAIN, 18);
     private final Font SIDEBAR_FONT = new Font("Segoe UI", Font.BOLD, 20);
 
+    private static final String DB_URL = "jdbc:mysql://localhost:3306/petCare_db";
+    private static final String DB_USER = "root";
+    private static final String DB_PASSWORD = "mysql@1234";
+
+    private ButtonGroup petTypeGroup;
+    private ButtonGroup ageGroup;
+    private int Id;
+
     public PetAdoptUIUser() {
         initializeFrame();
         createPanels();
+        loadPetsFromDatabase("All", "All");
         setVisible(true);
     }
 
@@ -44,28 +53,27 @@ public class PetAdoptUIUser extends JFrame {
     }
 
     private void createPanels() {
-        createSidebarPanel();
-        createMainPanel();
-        add(sidebarPanel, BorderLayout.WEST);
-        add(mainPanel, BorderLayout.CENTER);
+        createLeftPanel();
+        createRightPanel();
+        add(leftPanel, BorderLayout.WEST);
+        add(rightPanel, BorderLayout.CENTER);
     }
 
-    private void createSidebarPanel() {
-        sidebarPanel = new JPanel();
-        sidebarPanel.setLayout(new BoxLayout(sidebarPanel, BoxLayout.Y_AXIS));
-        sidebarPanel.setBackground(PRIMARY_COLOR);
-        sidebarPanel.setPreferredSize(new Dimension(250, getHeight()));
-        sidebarPanel.setBorder(new EmptyBorder(20, 0, 20, 0));
+    private void createLeftPanel() {
+        leftPanel = new JPanel();
+        leftPanel.setLayout(new BorderLayout());
+        leftPanel.setBackground(PRIMARY_COLOR);
+        leftPanel.setPreferredSize(new Dimension(250, getHeight()));
+        leftPanel.setBorder(new EmptyBorder(20, 20, 20, 20));
 
         JLabel logoLabel = new JLabel("PetCare");
         logoLabel.setFont(new Font("Segoe UI", Font.BOLD, 28));
         logoLabel.setForeground(Color.WHITE);
-        logoLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
-        sidebarPanel.add(logoLabel);
-
-        sidebarPanel.add(Box.createRigidArea(new Dimension(0, 50)));
+        logoLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        leftPanel.add(logoLabel, BorderLayout.NORTH);
 
         createFilterPanel();
+<<<<<<< HEAD
 
         sidebarPanel.add(Box.createVerticalGlue());
 
@@ -85,10 +93,13 @@ public class PetAdoptUIUser extends JFrame {
 
         backButton = createMenuButton("Back", sidebarPanel, e -> handleBack());
         backButton.setBackground(new Color(231, 76, 60));
+=======
+        leftPanel.add(filterPanel, BorderLayout.CENTER);
+>>>>>>> 86e0245188d2863aaf900ffd976a5e65dccb7bf8
     }
 
     private void createFilterPanel() {
-        JPanel filterPanel = new JPanel();
+        filterPanel = new JPanel();
         filterPanel.setLayout(new BoxLayout(filterPanel, BoxLayout.Y_AXIS));
         filterPanel.setBackground(PRIMARY_COLOR);
 
@@ -103,105 +114,60 @@ public class PetAdoptUIUser extends JFrame {
 
         filterPanel.setBorder(titledBorder);
 
-        addFilterSection(filterPanel, "Pet Type", new String[]{"Cat", "Dog", "Bird"});
-        addFilterSection(filterPanel, "Age", new String[]{"0-9 months", "1-3 years", "4 years and above"});
+        petTypeGroup = new ButtonGroup();
+        ageGroup = new ButtonGroup();
 
-        sidebarPanel.add(filterPanel);
+        addFilterSection(filterPanel, "Pet Type", new String[]{"All", "Cat", "Dog", "Bird"}, petTypeGroup);
+        addFilterSection(filterPanel, "Age", new String[]{"All", "0-11 months", "1-3 years", "4 years and above"}, ageGroup);
     }
 
-    private void addFilterSection(JPanel panel, String title, String[] options) {
-        JLabel titleLabel = new JLabel(title);
-        titleLabel.setFont(NORMAL_FONT);
-        titleLabel.setForeground(Color.WHITE);
-        titleLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
-        panel.add(titleLabel);
-        panel.add(Box.createRigidArea(new Dimension(0, 0)));
+    private void createRightPanel() {
+        rightPanel = new JPanel(new BorderLayout());
+        rightPanel.setBackground(BACKGROUND_COLOR);
+        rightPanel.setBorder(new EmptyBorder(20, 20, 20, 20));
 
-        ButtonGroup group = new ButtonGroup();
-        for (String option : options) {
-            JRadioButton radioButton = new JRadioButton(option);
-            radioButton.setFont(NORMAL_FONT);
-            radioButton.setForeground(Color.WHITE);
-            radioButton.setBackground(PRIMARY_COLOR);
-            radioButton.setAlignmentX(Component.LEFT_ALIGNMENT);
-            group.add(radioButton);
-            panel.add(radioButton);
-            panel.add(Box.createRigidArea(new Dimension(0, 0)));
-        }
-        panel.add(Box.createRigidArea(new Dimension(0, 20)));
+        createTablePanel();
+        createButtonPanel();
+
+        rightPanel.add(new JLabel("Pet Adoption", SwingConstants.CENTER), BorderLayout.NORTH);
+        rightPanel.add(tablePanel, BorderLayout.CENTER);
+        rightPanel.add(buttonPanel, BorderLayout.SOUTH);
     }
 
-    private void createMainPanel() {
-        mainPanel = new JPanel(new BorderLayout());
-        mainPanel.setBackground(BACKGROUND_COLOR);
-
-        createHeaderPanel();
-        createContentPanel();
-
-        mainPanel.add(headerPanel, BorderLayout.NORTH);
-        mainPanel.add(contentPanel, BorderLayout.CENTER);
-    }
-
-    private void createHeaderPanel() {
-        headerPanel = new JPanel(new BorderLayout());
-        headerPanel.setBackground(Color.WHITE);
-        headerPanel.setBorder(new EmptyBorder(20, 30, 20, 30));
-
-        JLabel titleLabel = new JLabel("Pet Adoption");
-        titleLabel.setFont(HEADER_FONT);
-        titleLabel.setForeground(TEXT_COLOR);
-        headerPanel.add(titleLabel, BorderLayout.WEST);
-
-        JLabel dateLabel = new JLabel("Today: " + java.time.LocalDate.now().toString());
-        dateLabel.setFont(NORMAL_FONT);
-        dateLabel.setForeground(TEXT_COLOR);
-        headerPanel.add(dateLabel, BorderLayout.EAST);
-
-    }
-
-    private void createContentPanel() {
-        contentPanel = new JPanel(new BorderLayout());
-        contentPanel.setBackground(BACKGROUND_COLOR);
-        contentPanel.setBorder(new EmptyBorder(30, 30, 30, 30));
+    private void createTablePanel() {
+        tablePanel = new JPanel(new BorderLayout());
+        tablePanel.setBackground(BACKGROUND_COLOR);
 
         createPetTable();
         JScrollPane scrollPane = new JScrollPane(petTable);
         scrollPane.setBorder(BorderFactory.createLineBorder(new Color(189, 195, 199), 2));
 
-        contentPanel.add(scrollPane, BorderLayout.CENTER);
+        tablePanel.add(scrollPane, BorderLayout.CENTER);
     }
 
-    private void createPetTable() {
-        String[] columnNames = {"Pet ID", "Pet Name", "Age", "Species", "Pet Type"};
-        tableModel = new DefaultTableModel(columnNames, 0);
-        petTable = new JTable(tableModel);
-        petTable.setFont(NORMAL_FONT);
-        petTable.getTableHeader().setFont(SIDEBAR_FONT);
-        petTable.setRowHeight(30);
-        petTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        petTable.setAutoCreateRowSorter(true);
+    private void createButtonPanel() {
+        buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
+        buttonPanel.setBackground(BACKGROUND_COLOR);
 
-        // Sample data - in a real application, this would come from a database
-        addPetToTable("1", "Bella", "2", "Bengal Dog", "Dog");
-        addPetToTable("2", "Milo", "1", "Pussy Cat", "Cat");
-        addPetToTable("3", "Charlie", "3", "American Dog", "Dog");
-        addPetToTable("4", "Max", "5", "Russian Cat", "Cat");
+        adoptButton = createStyledButton("Adopt");
+        backButton = createStyledButton("Back");
+
+        adoptButton.addActionListener(e -> handleAdopt());
+        backButton.addActionListener(e -> handleBack());
+
+        buttonPanel.add(adoptButton);
+        buttonPanel.add(backButton);
     }
 
-    private void addPetToTable(String id, String name, String age, String species, String type) {
-        tableModel.addRow(new Object[]{id, name, age, species, type});
-    }
-
-    private JButton createMenuButton(String text, JPanel panel, ActionListener actionListener) {
+    private JButton createStyledButton(String text) {
         JButton button = new JButton(text);
-        button.setFont(SIDEBAR_FONT);
+        button.setFont(NORMAL_FONT);
         button.setForeground(Color.WHITE);
         button.setBackground(PRIMARY_COLOR);
         button.setBorderPainted(false);
         button.setFocusPainted(false);
-        button.setAlignmentX(Component.CENTER_ALIGNMENT);
-        button.setMaximumSize(new Dimension(200, 40));
         button.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        button.setPreferredSize(new Dimension(120, 40));
 
         button.addMouseListener(new MouseAdapter() {
             @Override
@@ -215,18 +181,181 @@ public class PetAdoptUIUser extends JFrame {
             }
         });
 
-        button.addActionListener(actionListener);
-        panel.add(button);
-        panel.add(Box.createRigidArea(new Dimension(0, 10)));
-
         return button;
     }
 
-//    private void handleSort() {
-//        String selectedOption = (String) sortByComboBox.getSelectedItem();
-//        System.out.println("Sorting by: " + selectedOption);
-//        // TODO: Implement actual sorting logic
-//    }
+    private void handleAdopt() {
+        int selectedRow = petTable.getSelectedRow();
+        if (selectedRow != -1) {
+            int petId = (int) petTable.getValueAt(selectedRow, 0);
+            String petName = (String) petTable.getValueAt(selectedRow, 1);
+
+            int confirm = JOptionPane.showConfirmDialog(this,
+                    "Are you sure you want to adopt " + petName + " (ID: " + petId + ")?",
+                    "Confirm Adoption", JOptionPane.YES_NO_OPTION);
+
+            if (confirm == JOptionPane.YES_OPTION) {
+                if (removePetFromDatabase(petId)) {
+                    tableModel.removeRow(selectedRow);
+                    JOptionPane.showMessageDialog(this,
+                            petName + " has been successfully adopted! We will get you soon, stay tuned!",
+                            "Adoption Successful", JOptionPane.INFORMATION_MESSAGE);
+                } else {
+                    JOptionPane.showMessageDialog(this,
+                            "There was an error processing the adoption. Please try again.",
+                            "Adoption Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        } else {
+            JOptionPane.showMessageDialog(this,
+                    "Please select a pet to adopt.",
+                    "No Pet Selected", JOptionPane.WARNING_MESSAGE);
+        }
+    }
+
+    private boolean removePetFromDatabase(int petId) {
+        String sql = "DELETE FROM pets WHERE id = ?";
+
+        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setInt(1, petId);
+            int affectedRows = pstmt.executeUpdate();
+
+            int loginID = LoginScreen.ID;
+            if(loginID != -1) {
+                Id = loginID;
+            }
+
+            String sqlUpdateUser = "UPDATE users SET pets_adopted = pets_adopted + 1 WHERE id = ?";
+            try (PreparedStatement pstmtUpdateUser = conn.prepareStatement(sqlUpdateUser)) {
+                pstmtUpdateUser.setInt(1, Id);
+                pstmtUpdateUser.executeUpdate();
+            }
+
+            return affectedRows > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    private void addFilterSection(JPanel panel, String title, String[] options, ButtonGroup group) {
+        JLabel titleLabel = new JLabel(title);
+        titleLabel.setFont(NORMAL_FONT);
+        titleLabel.setForeground(Color.WHITE);
+        titleLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        panel.add(titleLabel);
+        panel.add(Box.createRigidArea(new Dimension(0, 0)));
+
+        for (String option : options) {
+            JRadioButton radioButton = new JRadioButton(option);
+            radioButton.setFont(NORMAL_FONT);
+            radioButton.setForeground(Color.WHITE);
+            radioButton.setBackground(PRIMARY_COLOR);
+            radioButton.setAlignmentX(Component.LEFT_ALIGNMENT);
+            group.add(radioButton);
+            panel.add(radioButton);
+            panel.add(Box.createRigidArea(new Dimension(0, 0)));
+
+            radioButton.addActionListener(e -> applyFilters());
+        }
+        panel.add(Box.createRigidArea(new Dimension(0, 20)));
+
+        group.getElements().nextElement().setSelected(true);
+    }
+
+    private void applyFilters() {
+        String petTypeFilter = getSelectedButtonText(petTypeGroup);
+        String ageFilter = getSelectedButtonText(ageGroup);
+        loadPetsFromDatabase(petTypeFilter, ageFilter);
+    }
+
+    private String getSelectedButtonText(ButtonGroup buttonGroup) {
+        for (java.util.Enumeration<AbstractButton> buttons = buttonGroup.getElements(); buttons.hasMoreElements();) {
+            AbstractButton button = buttons.nextElement();
+            if (button.isSelected()) {
+                return button.getText();
+            }
+        }
+        return null;
+    }
+
+    private void createPetTable() {
+        String[] columnNames = {"Pet ID", "Pet Name", "Age (Years)", "Age (Months)", "Species", "Pet Type"};
+        tableModel = new DefaultTableModel(columnNames, 0) {
+            @Override
+            public Class<?> getColumnClass(int column) {
+                if (column == 0 || column == 2) {
+                    return Integer.class;
+                }
+                return String.class;
+            }
+        };
+        petTable = new JTable(tableModel);
+        petTable.setFont(NORMAL_FONT);
+        petTable.getTableHeader().setFont(SIDEBAR_FONT);
+        petTable.setRowHeight(30);
+        petTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
+        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+        centerRenderer.setHorizontalAlignment(JLabel.CENTER);
+
+        for (int i = 0; i < petTable.getColumnCount(); i++) {
+            petTable.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
+        }
+    }
+
+    private void loadPetsFromDatabase(String petTypeFilter, String ageFilter) {
+        tableModel.setRowCount(0);  // Clear existing data
+        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
+            StringBuilder query = new StringBuilder("SELECT * FROM pets");
+            List<String> conditions = new ArrayList<>();
+
+            if (!"All".equals(petTypeFilter)) {
+                conditions.add("pettype = ?");
+            }
+
+            if (!"All".equals(ageFilter)) {
+                switch (ageFilter) {
+                    case "0-11 months":
+                        conditions.add("(age_years = 0 AND age_months BETWEEN 0 AND 11)");
+                        break;
+                    case "1-3 years":
+                        conditions.add("((age_years BETWEEN 1 AND 2) OR (age_years = 3 AND age_months <= 11))");
+                        break;
+                    case "4 years and above":
+                        conditions.add("(age_years >= 4)");
+                        break;
+                }
+            }
+
+            if (!conditions.isEmpty()) {
+                query.append(" WHERE ").append(String.join(" AND ", conditions));
+            }
+
+            try (PreparedStatement pstmt = conn.prepareStatement(query.toString())) {
+                if (!"All".equals(petTypeFilter)) {
+                    pstmt.setString(1, petTypeFilter);
+                }
+
+                try (ResultSet rs = pstmt.executeQuery()) {
+                    while (rs.next()) {
+                        int id = rs.getInt("id");
+                        String name = rs.getString("petname");
+                        int ageYears = rs.getInt("age_years");
+                        int ageMonths = rs.getInt("age_months");
+                        String species = rs.getString("species");
+                        String type = rs.getString("pettype");
+                        tableModel.addRow(new Object[]{id, name, ageYears, ageMonths, species, type});
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error loading pets from database: " + e.getMessage(), "Database Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
 
     private void handleBack() {
         int confirm = JOptionPane.showConfirmDialog(this, "Are you sure you want to go back to the dashboard?", "Confirm Exit", JOptionPane.YES_NO_OPTION);

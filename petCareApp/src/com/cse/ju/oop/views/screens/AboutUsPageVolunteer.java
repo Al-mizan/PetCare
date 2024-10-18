@@ -132,7 +132,7 @@ public class AboutUsPageVolunteer extends JFrame {
 
     private String getAboutUsText() {
         return "Pet Care is a community-driven organization dedicated to the well-being and " +
-                "rescue of animals in need. Founded in 2010, we have been at the forefront of " +
+                "rescue of animals in need. Founded in 2024, we have been at the forefront of " +
                 "animal welfare efforts, providing care, rehabilitation, and adoption services " +
                 "to stray and abandoned animals.\n\n" +
                 "Our mission is to create a safe, loving environment for all animals and to " +

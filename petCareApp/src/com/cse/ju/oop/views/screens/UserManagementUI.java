@@ -8,11 +8,12 @@ import javax.swing.table.JTableHeader;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.*;
 
 public class UserManagementUI extends JFrame {
     private JPanel mainPanel, topPanel, contentPanel, bottomPanel;
     private JTable userTable;
-    private JButton editButton, saveButton, backButton, logoutButton;
+    private JButton deleteButton, backButton;
     private final Color PRIMARY_COLOR = new Color(41, 128, 185);
     private final Color SECONDARY_COLOR = new Color(52, 152, 219);
     private final Color BACKGROUND_COLOR = new Color(236, 240, 241);
@@ -24,6 +25,7 @@ public class UserManagementUI extends JFrame {
     public UserManagementUI() {
         initializeFrame();
         createPanels();
+        loadUserData();
         setVisible(true);
     }
 
@@ -76,12 +78,7 @@ public class UserManagementUI extends JFrame {
         contentPanel = new JPanel(new BorderLayout(0, 20));
         contentPanel.setBackground(BACKGROUND_COLOR);
 
-//        JLabel userLabel = new JLabel("User Management");
-//        userLabel.setFont(new Font("Segoe UI", Font.BOLD, 20));
-//        userLabel.setForeground(TEXT_COLOR);
-//        userLabel.setBorder(new EmptyBorder(0, 0, 10, 0));
-
-        String[] columnNames = {"ID", "Name", "Phone Number", "Number of PetAdopted"};
+        String[] columnNames = {"ID", "Username", "Name", "Phone Number", "Email", "PetsAdopted"};
         DefaultTableModel tableModel = new DefaultTableModel(columnNames, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -89,44 +86,7 @@ public class UserManagementUI extends JFrame {
             }
         };
 
-        // Add sample data
-        tableModel.addRow(new Object[]{1, "Alice Smith", "123-456-7890", 5});
-        tableModel.addRow(new Object[]{2, "Bob Johnson", "987-654-3210", 3});
-        tableModel.addRow(new Object[]{3, "Charlie Davis", "555-123-4567", 8});
-        tableModel.addRow(new Object[]{4, "Diana Brown", "444-567-8901", 4});
-        tableModel.addRow(new Object[]{5, "Evan Lewis", "333-789-1234", 2});
-        tableModel.addRow(new Object[]{1, "Alice Smith", "123-456-7890", 5});
-        tableModel.addRow(new Object[]{2, "Bob Johnson", "987-654-3210", 3});
-        tableModel.addRow(new Object[]{3, "Charlie Davis", "555-123-4567", 8});
-        tableModel.addRow(new Object[]{4, "Diana Brown", "444-567-8901", 4});
-        tableModel.addRow(new Object[]{5, "Evan Lewis", "333-789-1234", 2});
-        tableModel.addRow(new Object[]{1, "Alice Smith", "123-456-7890", 5});
-        tableModel.addRow(new Object[]{2, "Bob Johnson", "987-654-3210", 3});
-        tableModel.addRow(new Object[]{3, "Charlie Davis", "555-123-4567", 8});
-        tableModel.addRow(new Object[]{4, "Diana Brown", "444-567-8901", 4});
-        tableModel.addRow(new Object[]{5, "Evan Lewis", "333-789-1234", 2});
-        tableModel.addRow(new Object[]{1, "Alice Smith", "123-456-7890", 5});
-        tableModel.addRow(new Object[]{2, "Bob Johnson", "987-654-3210", 3});
-        tableModel.addRow(new Object[]{3, "Charlie Davis", "555-123-4567", 8});
-        tableModel.addRow(new Object[]{4, "Diana Brown", "444-567-8901", 4});
-        tableModel.addRow(new Object[]{5, "Evan Lewis", "333-789-1234", 2});
-        tableModel.addRow(new Object[]{1, "Alice Smith", "123-456-7890", 5});
-        tableModel.addRow(new Object[]{2, "Bob Johnson", "987-654-3210", 3});
-        tableModel.addRow(new Object[]{3, "Charlie Davis", "555-123-4567", 8});
-        tableModel.addRow(new Object[]{4, "Diana Brown", "444-567-8901", 4});
-        tableModel.addRow(new Object[]{5, "Evan Lewis", "333-789-1234", 2});
-        tableModel.addRow(new Object[]{1, "Alice Smith", "123-456-7890", 5});
-        tableModel.addRow(new Object[]{2, "Bob Johnson", "987-654-3210", 3});
-        tableModel.addRow(new Object[]{3, "Charlie Davis", "555-123-4567", 8});
-        tableModel.addRow(new Object[]{4, "Diana Brown", "444-567-8901", 4});
-        tableModel.addRow(new Object[]{5, "Evan Lewis", "333-789-1234", 2});
-        tableModel.addRow(new Object[]{1, "Alice Smith", "123-456-7890", 5});
-        tableModel.addRow(new Object[]{2, "Bob Johnson", "987-654-3210", 3});
-        tableModel.addRow(new Object[]{3, "Charlie Davis", "555-123-4567", 8});
-        tableModel.addRow(new Object[]{4, "Diana Brown", "444-567-8901", 4});
-        tableModel.addRow(new Object[]{5, "Evan Lewis", "333-789-1234", 2});
-
-        userTable = new JTable(tableModel); /////
+        userTable = new JTable(tableModel);
         userTable.setFont(NORMAL_FONT);
         userTable.setRowHeight(30);
         userTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -138,29 +98,17 @@ public class UserManagementUI extends JFrame {
         header.setBackground(PRIMARY_COLOR);
         header.setForeground(Color.WHITE);
         header.setBorder(BorderFactory.createEmptyBorder());
-        header.setReorderingAllowed(false);
-        header.setResizingAllowed(false);
 
-        // Center table content in each cell
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment(JLabel.CENTER);
 
-        // Apply the renderer to each column
         for (int i = 0; i < userTable.getColumnCount(); i++) {
             userTable.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
         }
 
-        // Create a scroll pane for the table
         JScrollPane tableScrollPane = new JScrollPane(userTable);
         tableScrollPane.setBorder(BorderFactory.createEmptyBorder());
-        tableScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-        tableScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 
-        // Set preferred size for the scroll pane to control its height
-        tableScrollPane.setPreferredSize(new Dimension(900, 400));
-
-        // Add components to the content panel
-//        contentPanel.add(userLabel, BorderLayout.NORTH);
         contentPanel.add(tableScrollPane, BorderLayout.CENTER);
     }
 
@@ -168,14 +116,13 @@ public class UserManagementUI extends JFrame {
         bottomPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 0));
         bottomPanel.setBackground(BACKGROUND_COLOR);
 
-        editButton = createStyledButton("Edit");
+        deleteButton = createStyledButton("Delete");
         backButton = createStyledButton("Back");
 
-        editButton.addActionListener(e -> editUser());
+        deleteButton.addActionListener(e -> deleteUser());
         backButton.addActionListener(e -> backToDashboard());
 
-        bottomPanel.add(editButton);
-//        bottomPanel.add(saveButton);
+        bottomPanel.add(deleteButton);
         bottomPanel.add(backButton);
     }
 
@@ -204,13 +151,72 @@ public class UserManagementUI extends JFrame {
         return button;
     }
 
-    private void editUser() {
+    private void loadUserData() {
+        DefaultTableModel model = (DefaultTableModel) userTable.getModel();
+        model.setRowCount(0); // Clear existing data
+
+        String url = "jdbc:mysql://localhost:3306/petCare_db";
+        String user = "root";
+        String password = "mysql@1234";
+
+        try (Connection conn = DriverManager.getConnection(url, user, password);
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery("SELECT id, username, firstname, phone, email, pets_adopted FROM users")) {
+
+            while (rs.next()) {
+                Object[] row = {
+                        rs.getInt("id"),
+                        rs.getString("username"),
+                        rs.getString("firstname"),
+                        rs.getString("phone"),
+                        rs.getString("email"),
+                        rs.getInt("pets_adopted")
+                };
+                model.addRow(row);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error loading user data: " + e.getMessage(), "Database Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void deleteUser() {
         int selectedRow = userTable.getSelectedRow();
         if (selectedRow != -1) {
-            String petName = (String) userTable.getValueAt(selectedRow, 1);
-            JOptionPane.showMessageDialog(this, "Edit Pet functionality for " + petName + " will be implemented here.", "Edit Pet", JOptionPane.INFORMATION_MESSAGE);
+            int userId = (int) userTable.getValueAt(selectedRow, 0);
+            String userName = (String) userTable.getValueAt(selectedRow, 2);
+
+            int confirm = JOptionPane.showConfirmDialog(this,
+                    "Are you sure you want to delete user " + userName + " (ID: " + userId + ")?",
+                    "Confirm Deletion", JOptionPane.YES_NO_OPTION);
+
+            if (confirm == JOptionPane.YES_OPTION) {
+                if (deleteUserFromDatabase(userId)) {
+                    ((DefaultTableModel) userTable.getModel()).removeRow(selectedRow);
+                    JOptionPane.showMessageDialog(this, "User deleted successfully.", "Deletion Successful", JOptionPane.INFORMATION_MESSAGE);
+                } else {
+                    JOptionPane.showMessageDialog(this, "Failed to delete user from the database.", "Deletion Failed", JOptionPane.ERROR_MESSAGE);
+                }
+            }
         } else {
-            JOptionPane.showMessageDialog(this, "Please select a pet to edit.", "No Pet Selected", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Please select a user to delete.", "No User Selected", JOptionPane.WARNING_MESSAGE);
+        }
+    }
+
+    private boolean deleteUserFromDatabase(int userId) {
+        String url = "jdbc:mysql://localhost:3306/petCare_db";
+        String user = "root";
+        String password = "mysql@1234";
+
+        try (Connection conn = DriverManager.getConnection(url, user, password);
+             PreparedStatement pstmt = conn.prepareStatement("DELETE FROM users WHERE id = ?")) {
+
+            pstmt.setInt(1, userId);
+            int affectedRows = pstmt.executeUpdate();
+            return affectedRows > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
         }
     }
 
@@ -221,8 +227,6 @@ public class UserManagementUI extends JFrame {
             dispose();
         }
     }
-
-    // TODO: Implement action listeners for buttons
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
