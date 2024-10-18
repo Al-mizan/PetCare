@@ -106,7 +106,7 @@ public class AboutUsPageAdmin extends JFrame {
         contactInfoPanel.add(Box.createRigidArea(new Dimension(0, 10)));
         contactInfoPanel.add(createStyledLabel("Email: petCare@gmail.com", Font.PLAIN, 18));
         contactInfoPanel.add(createStyledLabel("Phone: +880 1705-094855", Font.PLAIN, 18));
-        contactInfoPanel.add(createStyledLabel("Address: CSE street, CSE, Jahangirnagar University", Font.PLAIN, 18));
+        contactInfoPanel.add(createStyledLabel("Address: CSE street, CSE, Jahangirnagar Universi", Font.PLAIN, 18));
 
         return contactInfoPanel;
     }

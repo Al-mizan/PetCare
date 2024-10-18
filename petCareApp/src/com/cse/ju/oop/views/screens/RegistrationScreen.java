@@ -39,7 +39,6 @@ public class RegistrationScreen extends JFrame {
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.weightx = 1.0;
 
-
         addFormField(formPanel, gbc, "                             First Name", firstNameField = createStyledTextField());
         addFormField(formPanel, gbc, "                             Surname", lastNameField = createStyledTextField());
         addFormField(formPanel, gbc, "                             Gender", genderComboBox = createStyledComboBox(new String[]{"Male", "Female", "Other"}));
@@ -55,9 +54,16 @@ public class RegistrationScreen extends JFrame {
         scrollPane.getViewport().setOpaque(false);
         mainPanel.add(scrollPane, BorderLayout.CENTER);
 
-        // Bottom panel for the signup button
+        // Bottom panel for the signup button and small logo
         JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 20));
         bottomPanel.setOpaque(false);
+
+        // Add a small logo above the sign-up button
+        ImageIcon logoIcon = new ImageIcon("C:\\Users\\HP\\Downloads\\logo.png"); // Replace with actual path
+        Image scaledLogo = logoIcon.getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH);  // Scale the image to a smaller size
+        JLabel logoLabel = new JLabel(new ImageIcon(scaledLogo));
+        bottomPanel.add(logoLabel);  // Add the small logo above the button
+
         signUpButton = createStyledButton("SIGN UP", new Color(65, 105, 225));
         signUpButton.setForeground(Color.WHITE);
         bottomPanel.add(signUpButton);
@@ -114,39 +120,30 @@ public class RegistrationScreen extends JFrame {
     }
 
     private void handleLogin() {
-//        String username = userText.getText();
-//        String password = new String(passText.getPassword());
         String selectedRole = (String) roleComboBox.getSelectedItem();
 
-        // Here you would typically validate the username and password
-        // For this example, we'll just check if the Admin role is selected
         if ("Admin".equals(selectedRole)) {
-            // Open the AdminInterface
             try {
                 openAdminInterfaceWindow();
             } catch (Exception e) {
                 e.printStackTrace();
                 JOptionPane.showMessageDialog(this, "Error opening AdminInterface: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             }
-        }
-        else if("Volunteer".equals(selectedRole)) {
+        } else if ("Volunteer".equals(selectedRole)) {
             try {
                 openVolunteerInterfaceWindow();
             } catch (Exception e) {
                 e.printStackTrace();
-                JOptionPane.showMessageDialog(this, "Error opening AdminInterface: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Error opening VolunteerInterface: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             }
-        }
-        else if("User".equals(selectedRole)) {
+        } else if ("User".equals(selectedRole)) {
             try {
                 openUserInterfaceWindow();
             } catch (Exception e) {
                 e.printStackTrace();
-                JOptionPane.showMessageDialog(this, "Error opening AdminInterface: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Error opening UserInterface: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             }
-        }
-        else {
-            // Handle other roles or show an error message
+        } else {
             JOptionPane.showMessageDialog(this, "Login functionality not implemented for " + selectedRole + " role.", "Login Error", JOptionPane.ERROR_MESSAGE);
         }
     }
@@ -154,10 +151,8 @@ public class RegistrationScreen extends JFrame {
     private void openAdminInterfaceWindow() {
         SwingUtilities.invokeLater(() -> {
             try {
-                System.out.println("Attempting to open AdminInterface");
                 AdminInterface adminInterface = new AdminInterface();
                 adminInterface.setVisible(true);
-                System.out.println("AdminInterface opened successfully");
                 this.dispose();
             } catch (Exception e) {
                 e.printStackTrace();
@@ -165,31 +160,29 @@ public class RegistrationScreen extends JFrame {
             }
         });
     }
+
     private void openUserInterfaceWindow() {
         SwingUtilities.invokeLater(() -> {
             try {
-                System.out.println("Attempting to open AdminInterface");
                 UserInterface userInterface = new UserInterface();
                 userInterface.setVisible(true);
-                System.out.println("UserInterface opened successfully");
                 this.dispose();
             } catch (Exception e) {
                 e.printStackTrace();
-                JOptionPane.showMessageDialog(this, "Error in open UserInterface Window: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Error in openUserInterfaceWindow: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             }
         });
     }
+
     private void openVolunteerInterfaceWindow() {
         SwingUtilities.invokeLater(() -> {
             try {
-                System.out.println("Attempting to open VolunteerInterface");
                 VolunteerInterface volunteerInterface = new VolunteerInterface();
                 volunteerInterface.setVisible(true);
-                System.out.println("VolunteerInterface opened successfully");
                 this.dispose();
             } catch (Exception e) {
                 e.printStackTrace();
-                JOptionPane.showMessageDialog(this, "Error in open VolunteerInterface Window: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Error in openVolunteerInterfaceWindow: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             }
         });
     }
