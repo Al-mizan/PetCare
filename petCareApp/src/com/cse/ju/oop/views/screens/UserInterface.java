@@ -63,6 +63,18 @@ public class UserInterface extends JFrame {
 
         sidebarPanel.add(Box.createVerticalGlue());
 
+        // Add logo image above the logout button
+        JLabel imgLabel = new JLabel();
+        ImageIcon logoIcon = new ImageIcon("C:\\Users\\HP\\Downloads\\logo.png");  // Replace with your logo path
+        Image image = logoIcon.getImage(); // Get the original image
+        Image resizedImage = image.getScaledInstance(250, 250, Image.SCALE_SMOOTH); // Resize image professionally
+        imgLabel.setIcon(new ImageIcon(resizedImage)); // Set resized image as icon
+        imgLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        sidebarPanel.add(imgLabel);
+
+        sidebarPanel.add(Box.createRigidArea(new Dimension(0, 20)));  // Space between logo and logout button
+
+        // Logout Button
         logoutButton = createMenuButton("Logout", sidebarPanel, e -> handleLogout());
         logoutButton.setBackground(new Color(231, 76, 60));
     }
@@ -160,7 +172,7 @@ public class UserInterface extends JFrame {
 
     private void showAboutUs() {
         SwingUtilities.invokeLater(() -> {
-            AboutUsPageUser aboutUsPageUser = new AboutUsPageUser(); /// create new window for userInterface
+            AboutUsPageUser aboutUsPageUser = new AboutUsPageUser(); // create new window for userInterface
             aboutUsPageUser.setVisible(true);
             dispose();
         });

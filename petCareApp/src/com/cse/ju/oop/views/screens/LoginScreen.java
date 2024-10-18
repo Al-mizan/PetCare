@@ -13,7 +13,7 @@ public class LoginScreen extends JFrame {
     private JButton loginButton, signUpButton;
 
     public LoginScreen() {
-        setTitle("Pet Care Login");
+        setTitle("Login");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(1000, 800);
         setLocationRelativeTo(null);
@@ -58,24 +58,17 @@ public class LoginScreen extends JFrame {
         gbc.insets = new Insets(10, 10, 10, 10);
 
         // Left panel components
-//        ImageIcon logoIcon = new ImageIcon(getClass().getResource("/path/to/your/logo.png")); // Update path
-//        Image img = logoIcon.getImage().getScaledInstance(150, 150, Image.SCALE_SMOOTH);
-//        logoLabel = new JLabel(new ImageIcon(img));
-//        gbc.gridx = 0;
-//        gbc.gridy = 0;
-//        leftPanel.add(logoLabel, gbc);
-
-        JLabel brandLabel = new JLabel("PetCare");
-        brandLabel.setFont(new Font("Arial", Font.BOLD, 40));
-        brandLabel.setForeground(Color.WHITE);
-        gbc.gridy = 1;
-        leftPanel.add(brandLabel, gbc);
-
-        JLabel sloganLabel = new JLabel("Care for your furry friends");
-        sloganLabel.setFont(new Font("Arial", Font.ITALIC, 18));
-        sloganLabel.setForeground(Color.WHITE);
-        gbc.gridy = 2;
-        leftPanel.add(sloganLabel, gbc);
+        try {
+            ImageIcon logoIcon = new ImageIcon("C:\\Users\\HP\\Downloads\\logo.png"); // Update with the correct logo path
+            Image img = logoIcon.getImage().getScaledInstance(350, 350, Image.SCALE_SMOOTH);
+            logoLabel = new JLabel(new ImageIcon(img));
+            gbc.gridx = 0;
+            gbc.gridy = 0;
+            leftPanel.add(logoLabel, gbc);
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("Failed to load the logo.");
+        }
 
         // Right panel components
         welcomeLabel = new JLabel("Welcome Back!");
@@ -197,76 +190,40 @@ public class LoginScreen extends JFrame {
         // Here you would typically validate the username and password
         // For this example, we'll just check if the Admin role is selected
         if ("Admin".equals(selectedRole)) {
-            // Open the AdminInterface
-            try {
-                openAdminInterfaceWindow();
-            } catch (Exception e) {
-                e.printStackTrace();
-                JOptionPane.showMessageDialog(this, "Error opening AdminInterface: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-            }
+            openAdminInterfaceWindow();
         }
-        else if("Volunteer".equals(selectedRole)) {
-            try {
-                openVolunteerInterfaceWindow();
-            } catch (Exception e) {
-                e.printStackTrace();
-                JOptionPane.showMessageDialog(this, "Error opening AdminInterface: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-            }
+        else if ("Volunteer".equals(selectedRole)) {
+            openVolunteerInterfaceWindow();
         }
-        else if("User".equals(selectedRole)) {
-            try {
-                openUserInterfaceWindow();
-            } catch (Exception e) {
-                e.printStackTrace();
-                JOptionPane.showMessageDialog(this, "Error opening AdminInterface: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-            }
+        else if ("User".equals(selectedRole)) {
+            openUserInterfaceWindow();
         }
         else {
-            // Handle other roles or show an error message
             JOptionPane.showMessageDialog(this, "Login functionality not implemented for " + selectedRole + " role.", "Login Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
     private void openAdminInterfaceWindow() {
         SwingUtilities.invokeLater(() -> {
-            try {
-                System.out.println("Attempting to open AdminInterface");
-                AdminInterface adminInterface = new AdminInterface();
-                adminInterface.setVisible(true);
-                System.out.println("AdminInterface opened successfully");
-                this.dispose();
-            } catch (Exception e) {
-                e.printStackTrace();
-                JOptionPane.showMessageDialog(this, "Error in openAdminInterfaceWindow: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-            }
+            AdminInterface adminInterface = new AdminInterface();
+            adminInterface.setVisible(true);
+            this.dispose();
         });
     }
+
     private void openUserInterfaceWindow() {
         SwingUtilities.invokeLater(() -> {
-            try {
-                System.out.println("Attempting to open AdminInterface");
-                UserInterface userInterface = new UserInterface();
-                userInterface.setVisible(true);
-                System.out.println("UserInterface opened successfully");
-                this.dispose();
-            } catch (Exception e) {
-                e.printStackTrace();
-                JOptionPane.showMessageDialog(this, "Error in open UserInterface Window: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-            }
+            UserInterface userInterface = new UserInterface();
+            userInterface.setVisible(true);
+            this.dispose();
         });
     }
+
     private void openVolunteerInterfaceWindow() {
         SwingUtilities.invokeLater(() -> {
-            try {
-                System.out.println("Attempting to open VolunteerInterface");
-                VolunteerInterface volunteerInterface = new VolunteerInterface();
-                volunteerInterface.setVisible(true);
-                System.out.println("VolunteerInterface opened successfully");
-                this.dispose();
-            } catch (Exception e) {
-                e.printStackTrace();
-                JOptionPane.showMessageDialog(this, "Error in open VolunteerInterface Window: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-            }
+            VolunteerInterface volunteerInterface = new VolunteerInterface();
+            volunteerInterface.setVisible(true);
+            this.dispose();
         });
     }
 

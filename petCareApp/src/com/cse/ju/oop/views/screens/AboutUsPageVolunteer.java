@@ -77,23 +77,56 @@ public class AboutUsPageVolunteer extends JFrame {
     }
 
     private JPanel createFooterPanel() {
-        JPanel footerPanel = new JPanel();
-        footerPanel.setLayout(new BoxLayout(footerPanel, BoxLayout.Y_AXIS));
-        footerPanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
+        JPanel footerPanel = new JPanel(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(10, 10, 10, 10);  // Padding around components
 
-        footerPanel.add(createStyledLabel("Contact Us", Font.BOLD, 24));
-        footerPanel.add(Box.createRigidArea(new Dimension(0, 10)));
-        footerPanel.add(createStyledLabel("Email: petCare@gmail.com", Font.PLAIN, 18));
-        footerPanel.add(createStyledLabel("Phone: +880 1705-094855", Font.PLAIN, 18));
-        footerPanel.add(createStyledLabel("Address: CSE street, CSE, Jahangirnagar University, Dhaka", Font.PLAIN, 18));
+        // Add the logo to the left
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.anchor = GridBagConstraints.NORTHWEST;  // Align logo to the top-left
+        JLabel logoLabel = createLogoLabel();
+        footerPanel.add(logoLabel, gbc);
+
+        // Add "Contact Us" and details, aligned with the logo
+        gbc.gridx = 1; // Place the text components to the right of the logo
+        gbc.gridy = 0;
+        gbc.anchor = GridBagConstraints.WEST;  // Align the text to the left
+        JPanel contactInfoPanel = createContactInfoPanel();
+        footerPanel.add(contactInfoPanel, gbc);
 
         return footerPanel;
+    }
+
+    private JPanel createContactInfoPanel() {
+        JPanel contactInfoPanel = new JPanel();
+        contactInfoPanel.setLayout(new BoxLayout(contactInfoPanel, BoxLayout.Y_AXIS));
+
+        contactInfoPanel.add(createStyledLabel("Contact Us", Font.BOLD, 24));
+        contactInfoPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+        contactInfoPanel.add(createStyledLabel("Email: petCare@gmail.com", Font.PLAIN, 18));
+        contactInfoPanel.add(createStyledLabel("Phone: +880 1705-094855", Font.PLAIN, 18));
+        contactInfoPanel.add(createStyledLabel("Address: CSE street, CSE, Jahangirnagar University", Font.PLAIN, 18));
+
+        return contactInfoPanel;
+    }
+
+    private JLabel createLogoLabel() {
+        // Load the original logo image
+        ImageIcon logoIcon = new ImageIcon("C:\\Users\\HP\\Downloads\\logo.png");
+
+        // Resize the image to a smaller size (e.g., 100x100 pixels)
+        Image scaledImage = logoIcon.getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH);
+        ImageIcon scaledLogoIcon = new ImageIcon(scaledImage);
+
+        // Create a JLabel with the scaled icon
+        JLabel logoLabel = new JLabel(scaledLogoIcon);
+        return logoLabel;
     }
 
     private JLabel createStyledLabel(String text, int style, int size) {
         JLabel label = new JLabel(text);
         label.setFont(new Font(FONT_FAMILY, style, size));
-        label.setAlignmentX(Component.CENTER_ALIGNMENT);
         return label;
     }
 

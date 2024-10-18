@@ -9,7 +9,7 @@ public class AdminInterface extends JFrame {
     private JButton logoutButton;
     private final Color PRIMARY_COLOR = new Color(65, 105, 225);
     private final Color SECONDARY_COLOR = new Color(100, 149, 237);
-    private final Font HEADER_FONT = new Font("Arial", Font.BOLD, 26);
+    private final Font HEADER_FONT = new Font("Arial", Font.BOLD, 28); // Larger header for a cleaner look
     private final Font NORMAL_FONT = new Font("Arial", Font.PLAIN, 18);
 
     public AdminInterface() {
@@ -26,7 +26,7 @@ public class AdminInterface extends JFrame {
         setSize(1000, 800);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new GridBagLayout());
-        setLocationRelativeTo(null);
+        setLocationRelativeTo(null); // Center the frame on the screen
     }
 
     private void createPanels() {
@@ -58,8 +58,8 @@ public class AdminInterface extends JFrame {
         gbc.gridx = 0;
         gbc.gridy = 1;
         gbc.gridwidth = 1;
-        gbc.fill = GridBagConstraints.BOTH; ////////
-        gbc.weightx = 0.25; // 1/3 of the total width
+        gbc.fill = GridBagConstraints.BOTH;
+        gbc.weightx = 0.25;
         gbc.weighty = 0.9;
         add(leftPanel, gbc);
 
@@ -67,7 +67,7 @@ public class AdminInterface extends JFrame {
         rightPanel.setBackground(Color.WHITE);
         gbc.gridx = 1;
         gbc.gridy = 1;
-        gbc.weightx = 0.75; // 2/3 of the total width
+        gbc.weightx = 0.75;
         gbc.weighty = 0.9;
         add(rightPanel, gbc);
     }
@@ -81,13 +81,11 @@ public class AdminInterface extends JFrame {
 
         logoutButton = createStyledButton("Logout");
         logoutButton.setBackground(new Color(255, 69, 0)); // Red background
-        logoutButton.setForeground(Color.WHITE);          // White text
+        logoutButton.setForeground(Color.WHITE);
         logoutButton.setFont(HEADER_FONT);
-//        logoutButton.setFont(new Font("Arial", Font.BOLD, 24));
         logoutButton.setFocusPainted(false);
-        logoutButton.setBorder(BorderFactory.createLineBorder(Color.RED, 2)); // Red border
+        logoutButton.setBorder(BorderFactory.createLineBorder(Color.RED, 2));
 
-        // Add hover effect
         logoutButton.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseEntered(java.awt.event.MouseEvent evt) {
@@ -100,8 +98,6 @@ public class AdminInterface extends JFrame {
             }
         });
 
-        logoutButton.addActionListener(e -> handleLogout());
-
         JPanel logoutPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         logoutPanel.setOpaque(false);
         logoutPanel.add(logoutButton);
@@ -110,10 +106,28 @@ public class AdminInterface extends JFrame {
 
     private void createLeftPanel() {
         leftPanel.add(Box.createRigidArea(new Dimension(5, 20)));
+
         addMenuButton("Manage Pets", leftPanel, e -> openPetManagement());
         addMenuButton("Manage Volunteers", leftPanel, e -> openVolunteerManagement());
         addMenuButton("Manage Users", leftPanel, e -> openUserManagement());
         addMenuButton("About Us", leftPanel, e -> showAboutUs());
+
+        leftPanel.add(Box.createRigidArea(new Dimension(0, 30))); // Add space before logo
+
+        // Add the logo below "About Us"
+        try {
+            // Load and resize the logo image
+            ImageIcon logoIcon = new ImageIcon("C:\\Users\\HP\\Downloads\\logo.png"); // Replace with the actual logo path
+            Image scaledLogo = logoIcon.getImage().getScaledInstance(250, 250, Image.SCALE_SMOOTH);
+            JLabel logoLabel = new JLabel(new ImageIcon(scaledLogo));
+
+            // Align the logo to the center
+            logoLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+            leftPanel.add(logoLabel);
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("Failed to load the logo.");
+        }
 
         leftPanel.add(Box.createVerticalGlue());
     }
@@ -123,8 +137,10 @@ public class AdminInterface extends JFrame {
         gbc.gridwidth = GridBagConstraints.REMAINDER;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.insets = new Insets(10, 10, 10, 10);
+
         JLabel welcomeLabel = new JLabel("Welcome, Admin!");
         welcomeLabel.setFont(HEADER_FONT);
+        welcomeLabel.setBorder(BorderFactory.createEmptyBorder(20, 0, 20, 0)); // Padding for better spacing
         rightPanel.add(welcomeLabel, gbc);
 
         String[] categories = {"Pets", "Volunteers", "Users", "Supplies"};
@@ -139,19 +155,61 @@ public class AdminInterface extends JFrame {
         button.setFont(NORMAL_FONT);
         button.setForeground(Color.WHITE);
         button.setBackground(PRIMARY_COLOR);
-        button.setBorderPainted(false);
+        button.setBorder(BorderFactory.createLineBorder(Color.WHITE, 2)); // Thin white border for a polished look
         button.setFocusPainted(false);
         button.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
+        // Add hover effect
+        button.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                button.setBackground(SECONDARY_COLOR);
+            }
+
+            @Override
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                button.setBackground(PRIMARY_COLOR);
+            }
+        });
+
         return button;
     }
 
     private void addMenuButton(String text, JPanel panel, ActionListener listener) {
         JButton button = createStyledButton(text);
-        button.setAlignmentX(Component.LEFT_ALIGNMENT);
-        button.setMaximumSize(new Dimension(10000, 10000));
+        button.setAlignmentX(Component.CENTER_ALIGNMENT); // Align buttons to the center
+        button.setMaximumSize(new Dimension(220, 60)); // Increased size for a larger button
         button.addActionListener(listener);
         panel.add(button);
-        panel.add(Box.createRigidArea(new Dimension(0, 10)));
+        panel.add(Box.createRigidArea(new Dimension(20, 20))); // Spacing between buttons
+    }
+
+    private JPanel createDashboardCard(String title) {
+        JPanel card = new JPanel();
+        card.setLayout(new BorderLayout());
+        card.setBackground(Color.WHITE);
+        card.setBorder(BorderFactory.createLineBorder(SECONDARY_COLOR, 2));
+
+        JLabel titleLabel = new JLabel(title, SwingConstants.CENTER);
+        titleLabel.setFont(NORMAL_FONT);
+        titleLabel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        card.add(titleLabel, BorderLayout.NORTH);
+
+        JLabel countLabel = new JLabel(String.valueOf((int) (Math.random() * 100)), SwingConstants.CENTER);
+        countLabel.setFont(HEADER_FONT);
+        card.add(countLabel, BorderLayout.CENTER);
+
+        return card;
+    }
+
+    private void handleLogout() {
+        int confirm = JOptionPane.showConfirmDialog(this,
+                "Are you sure you want to logout?", "Confirm Logout",
+                JOptionPane.YES_NO_OPTION);
+        if (confirm == JOptionPane.YES_OPTION) {
+            this.dispose();
+            new LoginScreen().setVisible(true);
+        }
     }
 
     private void openPetManagement() {
@@ -184,37 +242,6 @@ public class AdminInterface extends JFrame {
             aboutUsPageAdmin.setVisible(true);
             dispose();
         });
-    }
-
-    private JPanel createDashboardCard(String title) {
-        JPanel card = new JPanel();
-        card.setLayout(new BorderLayout());
-        card.setBackground(Color.WHITE);
-        card.setBorder(BorderFactory.createLineBorder(SECONDARY_COLOR, 2));
-
-        JLabel titleLabel = new JLabel(title,SwingConstants.CENTER); ///////////
-        titleLabel.setFont(NORMAL_FONT);
-        titleLabel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        card.add(titleLabel, BorderLayout.NORTH);
-
-        JLabel countLabel = new JLabel(String.valueOf((int)(Math.random() * 100)));
-        countLabel.setFont(HEADER_FONT);
-        countLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        card.add(countLabel, BorderLayout.CENTER);
-
-        return card;
-    }
-
-    private void handleLogout() {
-        int confirm = JOptionPane.showConfirmDialog(this,
-                "Are you sure you want to logout?", "Confirm Logout",
-                JOptionPane.YES_NO_OPTION);
-        if (confirm == JOptionPane.YES_OPTION) {
-            // TODO: Implement actual logout logic
-            System.out.println("Logout");
-            this.dispose();
-            new LoginScreen().setVisible(true);
-        }
     }
 
     public static void main(String[] args) {

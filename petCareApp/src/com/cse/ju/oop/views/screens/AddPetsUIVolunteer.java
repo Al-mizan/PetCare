@@ -70,8 +70,16 @@ public class AddPetsUIVolunteer extends JFrame {
 
         sidebarPanel.add(Box.createVerticalGlue());
 
+        // Adding the logo image above the logout button
+        ImageIcon logoIcon = new ImageIcon("C:\\Users\\HP\\Downloads\\logo.png");
+        JLabel logoImageLabel = new JLabel(logoIcon);
+        logoImageLabel.setPreferredSize(new Dimension( 50, 250)); // Set the preferred size of the logo
+        logoImageLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        sidebarPanel.add(logoImageLabel); // Adding the logo to the sidebar
+
         logoutButton = createMenuButton("Logout", e -> handleLogout());
         logoutButton.setBackground(new Color(231, 76, 60));
+        sidebarPanel.add(logoutButton); // Adding logout button
     }
 
     private void createMainPanel() {
@@ -237,44 +245,29 @@ public class AddPetsUIVolunteer extends JFrame {
     }
 
     private void addPet() {
-        if (!validateInput()) {
+        String petType = (String) petTypeComboBox.getSelectedItem();
+        String petName = petNameField.getText();
+        String petSpecies = petSpeciesField.getText();
+        String petAge = petAgeField.getText();
+
+        if (petName.isEmpty() || petSpecies.isEmpty() || petAge.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Please fill all fields", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
-        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
-            String sql = "INSERT INTO pets (type, name, species, age) VALUES (?, ?, ?, ?)";
-            try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
-                pstmt.setString(1, (String) petTypeComboBox.getSelectedItem());
-                pstmt.setString(2, petNameField.getText().trim());
-                pstmt.setString(3, petSpeciesField.getText().trim());
-                pstmt.setInt(4, Integer.parseInt(petAgeField.getText().trim()));
-                pstmt.executeUpdate();
-            }
-            JOptionPane.showMessageDialog(this, "Pet added successfully", "Success", JOptionPane.INFORMATION_MESSAGE);
+        try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+             PreparedStatement statement = connection.prepareStatement("INSERT INTO pets (type, name, species, age) VALUES (?, ?, ?, ?)")) {
+            statement.setString(1, petType);
+            statement.setString(2, petName);
+            statement.setString(3, petSpecies);
+            statement.setInt(4, Integer.parseInt(petAge));
+            statement.executeUpdate();
+
+            JOptionPane.showMessageDialog(this, "Pet added successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
             clearFields();
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-            JOptionPane.showMessageDialog(this, "Error adding pet to database", "Database Error", JOptionPane.ERROR_MESSAGE);
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(this, "Error adding pet: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
-    }
-
-    private boolean validateInput() {
-        if (petNameField.getText().trim().isEmpty() || petSpeciesField.getText().trim().isEmpty() || petAgeField.getText().trim().isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Please fill all fields", "Input Error", JOptionPane.ERROR_MESSAGE);
-            return false;
-        }
-
-        try {
-            int age = Integer.parseInt(petAgeField.getText().trim());
-            if (age < 0 || age > 100) {
-                throw new NumberFormatException();
-            }
-        } catch (NumberFormatException ex) {
-            JOptionPane.showMessageDialog(this, "Please enter a valid age (0-100)", "Input Error", JOptionPane.ERROR_MESSAGE);
-            return false;
-        }
-
-        return true;
     }
 
     private void clearFields() {
@@ -284,40 +277,23 @@ public class AddPetsUIVolunteer extends JFrame {
         petAgeField.setText("");
     }
 
-    private void handleLogout() {
-        int confirm = JOptionPane.showConfirmDialog(this,
-                "Are you sure you want to logout?", "Confirm Logout",
-                JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
-        if (confirm == JOptionPane.YES_OPTION) {
-            // TODO: Implement actual logout logic
-            new LoginScreen().setVisible(true);
-            dispose();
-        }
-    }
-
     private void goBack() {
-        new VolunteerInterface().setVisible(true);
-        dispose();
+        // Navigate to the dashboard
     }
 
     private void openShowPets() {
-        new ShowPetsUIVolunteer().setVisible(true);
-        dispose();
+        // Open the Show Pets UI
     }
 
     private void showAboutUs() {
-        new AboutUsPageVolunteer().setVisible(true);
-        dispose();
+        // Show About Us information
+    }
+
+    private void handleLogout() {
+        // Handle user logout
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            try {
-                UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            new AddPetsUIVolunteer();
-        });
+        SwingUtilities.invokeLater(AddPetsUIVolunteer::new);
     }
 }
