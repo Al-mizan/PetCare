@@ -8,11 +8,12 @@ import javax.swing.table.JTableHeader;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.*;
 
 public class PetManagementUI extends JFrame {
     private JPanel mainPanel, topPanel, contentPanel, bottomPanel;
     private JTable petTable;
-    private JButton addButton, editButton, deleteButton, backButton;
+    private JButton deleteButton, backButton;
     private final Color PRIMARY_COLOR = new Color(41, 128, 185);
     private final Color SECONDARY_COLOR = new Color(52, 152, 219);
     private final Color BACKGROUND_COLOR = new Color(236, 240, 241);
@@ -20,6 +21,7 @@ public class PetManagementUI extends JFrame {
     private final Font HEADER_FONT = new Font("Segoe UI", Font.BOLD, 24);
     private final Font NORMAL_FONT = new Font("Segoe UI", Font.PLAIN, 16);
     private final Font TABLE_HEADER_FONT = new Font("Segoe UI", Font.BOLD, 14);
+    private DefaultTableModel tableModel;
 
     public PetManagementUI() {
         initializeFrame();
@@ -72,12 +74,19 @@ public class PetManagementUI extends JFrame {
         topPanel.add(adminLabel, BorderLayout.EAST);
     }
 
+    private Connection getConnection() throws SQLException {
+        String url = "jdbc:mysql://localhost:3306/petCare_db";
+        String user = "root";
+        String password = "mysql@1234";
+        return DriverManager.getConnection(url, user, password);
+    }
+
     private void createContentPanel() {
         contentPanel = new JPanel(new BorderLayout(0, 20));
         contentPanel.setBackground(BACKGROUND_COLOR);
 
-        String[] columnNames = {"Pet ID", "Pet Name", "Age", "Species", "Pet Type", "Status"};
-        DefaultTableModel tableModel = new DefaultTableModel(columnNames, 0) {
+        String[] columnNames = {"Pet ID", "Pet Name", "Age (Years)", "Age (Months)", "Species", "Pet Type"};
+        tableModel = new DefaultTableModel(columnNames, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
                 return false;
@@ -97,58 +106,59 @@ public class PetManagementUI extends JFrame {
         header.setForeground(Color.WHITE);
         header.setBorder(BorderFactory.createEmptyBorder());
 
-        // Add some sample rows (replace with actual data as needed)
-        tableModel.addRow(new Object[]{"1", "Buddy", "2", "Dog", "Golden Retriever", "Available"});
-        tableModel.addRow(new Object[]{"2", "Milo", "1", "Cat", "Persian", "Adopted"});
-        tableModel.addRow(new Object[]{"3", "Rex", "3", "Dog", "German Shepherd", "In Treatment"});
-        tableModel.addRow(new Object[]{"1", "Buddy", "2", "Dog", "Golden Retriever", "Available"});
-        tableModel.addRow(new Object[]{"2", "Milo", "1", "Cat", "Persian", "Adopted"});
-        tableModel.addRow(new Object[]{"3", "Rex", "3", "Dog", "German Shepherd", "In Treatment"});
-        tableModel.addRow(new Object[]{"1", "Buddy", "2", "Dog", "Golden Retriever", "Available"});
-        tableModel.addRow(new Object[]{"2", "Milo", "1", "Cat", "Persian", "Adopted"});
-        tableModel.addRow(new Object[]{"3", "Rex", "3", "Dog", "German Shepherd", "In Treatment"});
-        tableModel.addRow(new Object[]{"1", "Buddy", "2", "Dog", "Golden Retriever", "Available"});
-        tableModel.addRow(new Object[]{"2", "Milo", "1", "Cat", "Persian", "Adopted"});
-        tableModel.addRow(new Object[]{"3", "Rex", "3", "Dog", "German Shepherd", "In Treatment"});
-        tableModel.addRow(new Object[]{"1", "Buddy", "2", "Dog", "Golden Retriever", "Available"});
-        tableModel.addRow(new Object[]{"2", "Milo", "1", "Cat", "Persian", "Adopted"});
-        tableModel.addRow(new Object[]{"3", "Rex", "3", "Dog", "German Shepherd", "In Treatment"});
-        tableModel.addRow(new Object[]{"1", "Buddy", "2", "Dog", "Golden Retriever", "Available"});
-        tableModel.addRow(new Object[]{"2", "Milo", "1", "Cat", "Persian", "Adopted"});
-        tableModel.addRow(new Object[]{"3", "Rex", "3", "Dog", "German Shepherd", "In Treatment"});
-        tableModel.addRow(new Object[]{"1", "Buddy", "2", "Dog", "Golden Retriever", "Available"});
-        tableModel.addRow(new Object[]{"2", "Milo", "1", "Cat", "Persian", "Adopted"});
-        tableModel.addRow(new Object[]{"3", "Rex", "3", "Dog", "German Shepherd", "In Treatment"});
-        tableModel.addRow(new Object[]{"1", "Buddy", "2", "Dog", "Golden Retriever", "Available"});
-        tableModel.addRow(new Object[]{"2", "Milo", "1", "Cat", "Persian", "Adopted"});
-        tableModel.addRow(new Object[]{"3", "Rex", "3", "Dog", "German Shepherd", "In Treatment"});
-        // Center table content in each cell
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment(JLabel.CENTER);
 
-        // Apply the renderer to each column
         for (int i = 0; i < petTable.getColumnCount(); i++) {
             petTable.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
         }
+
         JScrollPane tableScrollPane = new JScrollPane(petTable);
         tableScrollPane.setBorder(BorderFactory.createEmptyBorder());
 
         contentPanel.add(tableScrollPane, BorderLayout.CENTER);
+        fetchPetsData();
+    }
+
+    private void fetchPetsData() {
+//        tableModel.setRowCount(0);
+        DefaultTableModel model = (DefaultTableModel) petTable.getModel();
+        model.setRowCount(0); // Clear existing data
+
+
+        try (Connection conn = getConnection();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery("SELECT * FROM pets")) {
+
+            while (rs.next()) {
+                Object[] row = {
+                        rs.getInt("id"),
+                        rs.getString("petname"),
+                        rs.getInt("age_years"),
+                        rs.getInt("age_months"),
+                        rs.getString("species"),
+                        rs.getString("pettype")
+                };
+                model.addRow(row);
+            }
+            petTable.setModel(tableModel);
+            petTable.repaint();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error fetching pets data: " + e.getMessage(), "Database Error", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     private void createBottomPanel() {
         bottomPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 0));
         bottomPanel.setBackground(BACKGROUND_COLOR);
 
-        editButton = createStyledButton("Edit Pet");
         deleteButton = createStyledButton("Delete Pet");
         backButton = createStyledButton("Back to Dashboard");
 
-        editButton.addActionListener(e -> editPet());
         deleteButton.addActionListener(e -> deletePet());
         backButton.addActionListener(e -> backToDashboard());
 
-        bottomPanel.add(editButton);
         bottomPanel.add(deleteButton);
         bottomPanel.add(backButton);
     }
@@ -178,27 +188,43 @@ public class PetManagementUI extends JFrame {
         return button;
     }
 
-    private void editPet() {
-        int selectedRow = petTable.getSelectedRow();
-        if (selectedRow != -1) {
-            String petName = (String) petTable.getValueAt(selectedRow, 1);
-            JOptionPane.showMessageDialog(this, "Edit Pet functionality for " + petName + " will be implemented here.", "Edit Pet", JOptionPane.INFORMATION_MESSAGE);
-        } else {
-            JOptionPane.showMessageDialog(this, "Please select a pet to edit.", "No Pet Selected", JOptionPane.WARNING_MESSAGE);
-        }
-    }
-
     private void deletePet() {
         int selectedRow = petTable.getSelectedRow();
         if (selectedRow != -1) {
+            int petId = (int) petTable.getValueAt(selectedRow, 0);
             String petName = (String) petTable.getValueAt(selectedRow, 1);
-            int confirm = JOptionPane.showConfirmDialog(this, "Are you sure you want to delete " + petName + "?", "Confirm Deletion", JOptionPane.YES_NO_OPTION);
+
+            int confirm = JOptionPane.showConfirmDialog(this,
+                    "Are you sure you want to delete pet " + petName + " (ID: " + petId + ")?",
+                    "Confirm Deletion", JOptionPane.YES_NO_OPTION);
+
             if (confirm == JOptionPane.YES_OPTION) {
-                ((DefaultTableModel) petTable.getModel()).removeRow(selectedRow);
-                JOptionPane.showMessageDialog(this, petName + " has been deleted.", "Pet Deleted", JOptionPane.INFORMATION_MESSAGE);
+                if (deletePetFromDatabase(petId)) {
+                    ((DefaultTableModel) petTable.getModel()).removeRow(selectedRow);
+                    JOptionPane.showMessageDialog(this, "pet deleted successfully.", "Deletion Successful", JOptionPane.INFORMATION_MESSAGE);
+                } else {
+                    JOptionPane.showMessageDialog(this, "Failed to delete volunteer from the database.", "Deletion Failed", JOptionPane.ERROR_MESSAGE);
+                }
             }
         } else {
-            JOptionPane.showMessageDialog(this, "Please select a pet to delete.", "No Pet Selected", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Please select a pet to delete.", "No pet Selected", JOptionPane.WARNING_MESSAGE);
+        }
+    }
+
+    private boolean deletePetFromDatabase(int petId) {
+        String url = "jdbc:mysql://localhost:3306/petCare_db";
+        String user = "root";
+        String password = "mysql@1234";
+
+        try (Connection conn = DriverManager.getConnection(url, user, password);
+             PreparedStatement pstmt = conn.prepareStatement("DELETE FROM pets WHERE id = ?")) {
+
+            pstmt.setInt(1, petId);
+            int affectedRows = pstmt.executeUpdate();
+            return affectedRows > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
         }
     }
 

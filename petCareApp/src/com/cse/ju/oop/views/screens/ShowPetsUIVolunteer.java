@@ -8,6 +8,7 @@ import javax.swing.table.JTableHeader;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.*;
 
 public class ShowPetsUIVolunteer extends JFrame {
     private JPanel mainPanel, topPanel, contentPanel, bottomPanel;
@@ -20,6 +21,7 @@ public class ShowPetsUIVolunteer extends JFrame {
     private final Font HEADER_FONT = new Font("Segoe UI", Font.BOLD, 24);
     private final Font NORMAL_FONT = new Font("Segoe UI", Font.PLAIN, 16);
     private final Font TABLE_HEADER_FONT = new Font("Segoe UI", Font.BOLD, 14);
+    private DefaultTableModel tableModel;
 
     public ShowPetsUIVolunteer() {
         initializeFrame();
@@ -64,20 +66,27 @@ public class ShowPetsUIVolunteer extends JFrame {
         titleLabel.setFont(HEADER_FONT);
         titleLabel.setForeground(TEXT_COLOR);
 
-        JLabel adminLabel = new JLabel("Volunteer Dashboard");
-        adminLabel.setFont(NORMAL_FONT);
-        adminLabel.setForeground(SECONDARY_COLOR);
+        JLabel volunteerLabel = new JLabel("Volunteer Dashboard");
+        volunteerLabel.setFont(NORMAL_FONT);
+        volunteerLabel.setForeground(SECONDARY_COLOR);
 
         topPanel.add(titleLabel, BorderLayout.WEST);
-        topPanel.add(adminLabel, BorderLayout.EAST);
+        topPanel.add(volunteerLabel, BorderLayout.EAST);
+    }
+
+    private Connection getConnection() throws SQLException {
+        String url = "jdbc:mysql://localhost:3306/petCare_db";
+        String user = "root";
+        String password = "mysql@1234";
+        return DriverManager.getConnection(url, user, password);
     }
 
     private void createContentPanel() {
         contentPanel = new JPanel(new BorderLayout(0, 20));
         contentPanel.setBackground(BACKGROUND_COLOR);
 
-        String[] columnNames = {"Pet ID", "Pet Name", "Age", "Species", "Pet Type", "Status"};
-        DefaultTableModel tableModel = new DefaultTableModel(columnNames, 0) {
+        String[] columnNames = {"Pet ID", "Pet Name", "Age (Years)", "Age (Months)", "Species", "Pet Type"};
+        tableModel = new DefaultTableModel(columnNames, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
                 return false;
@@ -97,43 +106,45 @@ public class ShowPetsUIVolunteer extends JFrame {
         header.setForeground(Color.WHITE);
         header.setBorder(BorderFactory.createEmptyBorder());
 
-        // Add some sample rows (replace with actual data as needed)
-        tableModel.addRow(new Object[]{"1", "Buddy", "2", "Dog", "Golden Retriever", "Available"});
-        tableModel.addRow(new Object[]{"2", "Milo", "1", "Cat", "Persian", "Adopted"});
-        tableModel.addRow(new Object[]{"3", "Rex", "3", "Dog", "German Shepherd", "In Treatment"});
-        tableModel.addRow(new Object[]{"1", "Buddy", "2", "Dog", "Golden Retriever", "Available"});
-        tableModel.addRow(new Object[]{"2", "Milo", "1", "Cat", "Persian", "Adopted"});
-        tableModel.addRow(new Object[]{"3", "Rex", "3", "Dog", "German Shepherd", "In Treatment"});
-        tableModel.addRow(new Object[]{"1", "Buddy", "2", "Dog", "Golden Retriever", "Available"});
-        tableModel.addRow(new Object[]{"2", "Milo", "1", "Cat", "Persian", "Adopted"});
-        tableModel.addRow(new Object[]{"3", "Rex", "3", "Dog", "German Shepherd", "In Treatment"});
-        tableModel.addRow(new Object[]{"1", "Buddy", "2", "Dog", "Golden Retriever", "Available"});
-        tableModel.addRow(new Object[]{"2", "Milo", "1", "Cat", "Persian", "Adopted"});
-        tableModel.addRow(new Object[]{"3", "Rex", "3", "Dog", "German Shepherd", "In Treatment"});
-        tableModel.addRow(new Object[]{"1", "Buddy", "2", "Dog", "Golden Retriever", "Available"});
-        tableModel.addRow(new Object[]{"2", "Milo", "1", "Cat", "Persian", "Adopted"});
-        tableModel.addRow(new Object[]{"3", "Rex", "3", "Dog", "German Shepherd", "In Treatment"});
-        tableModel.addRow(new Object[]{"1", "Buddy", "2", "Dog", "Golden Retriever", "Available"});
-        tableModel.addRow(new Object[]{"2", "Milo", "1", "Cat", "Persian", "Adopted"});
-        tableModel.addRow(new Object[]{"3", "Rex", "3", "Dog", "German Shepherd", "In Treatment"});
-        tableModel.addRow(new Object[]{"1", "Buddy", "2", "Dog", "Golden Retriever", "Available"});
-        tableModel.addRow(new Object[]{"2", "Milo", "1", "Cat", "Persian", "Adopted"});
-        tableModel.addRow(new Object[]{"3", "Rex", "3", "Dog", "German Shepherd", "In Treatment"});
-        tableModel.addRow(new Object[]{"1", "Buddy", "2", "Dog", "Golden Retriever", "Available"});
-        tableModel.addRow(new Object[]{"2", "Milo", "1", "Cat", "Persian", "Adopted"});
-        tableModel.addRow(new Object[]{"3", "Rex", "3", "Dog", "German Shepherd", "In Treatment"});
-        // Center table content in each cell
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment(JLabel.CENTER);
 
-        // Apply the renderer to each column
         for (int i = 0; i < petTable.getColumnCount(); i++) {
             petTable.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
         }
+
         JScrollPane tableScrollPane = new JScrollPane(petTable);
         tableScrollPane.setBorder(BorderFactory.createEmptyBorder());
 
         contentPanel.add(tableScrollPane, BorderLayout.CENTER);
+        fetchPetsData();
+    }
+
+    private void fetchPetsData() {
+        DefaultTableModel model = (DefaultTableModel) petTable.getModel();
+        model.setRowCount(0); // Clear existing data
+
+        try (Connection conn = getConnection();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery("SELECT * FROM pets")) {
+
+            while (rs.next()) {
+                Object[] row = {
+                        rs.getInt("id"),
+                        rs.getString("petname"),
+                        rs.getInt("age_years"),
+                        rs.getInt("age_months"),
+                        rs.getString("species"),
+                        rs.getString("pettype")
+                };
+                model.addRow(row);
+            }
+            petTable.setModel(tableModel);
+            petTable.repaint();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error fetching pets data: " + e.getMessage(), "Database Error", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     private void createBottomPanel() {
@@ -143,6 +154,7 @@ public class ShowPetsUIVolunteer extends JFrame {
         backButton = createStyledButton("Back to Dashboard");
 
         backButton.addActionListener(e -> backToDashboard());
+
         bottomPanel.add(backButton);
     }
 

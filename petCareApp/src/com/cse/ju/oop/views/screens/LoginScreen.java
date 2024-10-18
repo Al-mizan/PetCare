@@ -203,6 +203,31 @@ public class LoginScreen extends JFrame {
         });
     }
 
+    public static void authenticateUserRegistration(String username, String password, String role) throws ClassNotFoundException {
+        String tableName = role.toLowerCase() + "s"; // Assumes tables are named: admins, users, volunteers
+        String query = "SELECT * FROM " + tableName + " WHERE username = ? AND password = ?";
+
+        Class.forName("com.mysql.cj.jdbc.Driver");
+
+        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+             PreparedStatement pstmt1 = conn.prepareStatement(query)) {
+            System.out.println("Successfully go into mysql");
+            pstmt1.setString(1, username);
+            pstmt1.setString(2, password); // Note: In a real application, you should use hashed passwords
+
+            try (ResultSet rs = pstmt1.executeQuery()) {
+
+                if (rs.next()) {
+                    ID = rs.getInt("id");
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Database error: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
     private void handleLogin() throws ClassNotFoundException {
         String username = userText.getText();
         String password = new String(passText.getPassword());

@@ -154,7 +154,7 @@ public class RegistrationScreen extends JFrame {
 
                 int rowsAffected = pstmt.executeUpdate();
                 if (rowsAffected > 0) {
-                    authenticateUser(userName, password, selectedRole);
+                    LoginScreen.authenticateUserRegistration(userName, password, selectedRole);
                     openAppropriateInterface(selectedRole);
                 } else {
                     JOptionPane.showMessageDialog(this, "Registration failed. Please try again.", "Error", JOptionPane.ERROR_MESSAGE);
@@ -169,30 +169,7 @@ public class RegistrationScreen extends JFrame {
         }
     }
 
-    private void authenticateUser(String username, String password, String role) throws ClassNotFoundException {
-        String tableName = role.toLowerCase() + "s"; // Assumes tables are named: admins, users, volunteers
-        String query = "SELECT * FROM " + tableName + " WHERE username = ? AND password = ?";
-
-        Class.forName("com.mysql.cj.jdbc.Driver");
-
-        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
-             PreparedStatement pstmt1 = conn.prepareStatement(query)) {
-            System.out.println("Successfully go into mysql");
-            pstmt1.setString(1, username);
-            pstmt1.setString(2, password); // Note: In a real application, you should use hashed passwords
-
-            try (ResultSet rs = pstmt1.executeQuery()) {
-
-                if (rs.next()) {
-                    ID = rs.getInt("id");
-                }
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(this, "Database error: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        }
-    }
+    ///////////
 
     private String getTableNameForRole(String role) {
         switch (role.toLowerCase()) {

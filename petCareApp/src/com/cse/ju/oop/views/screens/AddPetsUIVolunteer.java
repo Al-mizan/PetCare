@@ -297,35 +297,6 @@ public class AddPetsUIVolunteer extends JFrame {
         return true;
     }
 
-//    private void addPet() {
-//        if (!validateInput()) {
-//            return;
-//        }
-//
-//        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
-//            String sql = "INSERT INTO pets (petname, age_years, age_months, species, pettype) VALUES (?, ?, ?, ?, ?)";
-//            try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
-//                pstmt.setString(1, petNameField.getText().trim());
-//                pstmt.setInt(2, Integer.parseInt(petAgeYearsField.getText().trim()));
-//                pstmt.setInt(3, Integer.parseInt(petAgeMonthsField.getText().trim()));
-//                pstmt.setString(4, petSpeciesField.getText().trim());
-//                pstmt.setString(5, (String) petTypeComboBox.getSelectedItem());
-//                pstmt.executeUpdate();
-////                String sql1 = "INSERT INTO volunteers (pets_rescued) VALUES (?)";
-////                try(PreparedStatement pstmt1 = conn.prepareStatement(sql1)) {
-////                    pstmt1.setInt(8, pets_rescued = pets_rescued + 1);
-////                }
-
-//            }
-//            JOptionPane.showMessageDialog(this, "Pet added successfully", "Success", JOptionPane.INFORMATION_MESSAGE);
-//            clearFields();
-//        } catch (SQLException ex) {
-//            ex.printStackTrace();
-//            JOptionPane.showMessageDialog(this, "Error adding pet to database", "Database Error", JOptionPane.ERROR_MESSAGE);
-//        }
-//    }
-//
-
     private void addPet() {
         if (!validateInput()) {
             return;
@@ -347,11 +318,8 @@ public class AddPetsUIVolunteer extends JFrame {
                 pstmtInsertPet.executeUpdate();
 
                 int loginID = LoginScreen.ID;
-                int registrationID = RegistrationScreen.ID;
                 if(loginID != -1) {
                     Id = loginID;
-                } else if (registrationID != -1) {
-                    Id = registrationID;
                 }
 
                 String sqlUpdateVolunteer = "UPDATE volunteers SET pets_rescued = pets_rescued + 1 WHERE id = ?";

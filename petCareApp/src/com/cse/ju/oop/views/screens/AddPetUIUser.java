@@ -12,11 +12,12 @@ public class AddPetUIUser extends JFrame {
     private JPanel sidebarPanel, mainPanel, headerPanel, contentPanel;
     private JButton logoutButton;
     private JComboBox<String> petTypeComboBox;
-    private JTextField petNameField, petSpeciesField, petAgeYearsField, petAgeMonthsField;;
+    private JTextField petNameField, petSpeciesField, petAgeYearsField, petAgeMonthsField;
+    private int Id;
 
-    private static final String DB_URL = "jdbc:mysql://localhost:3306/petcare_db";
-    private static final String DB_USER = "your_username";
-    private static final String DB_PASSWORD = "your_password";
+    private static final String DB_URL = "jdbc:mysql://localhost:3306/petCare_db";
+    private static final String DB_USER = "root";
+    private static final String DB_PASSWORD = "mysql@1234";
 
     private static final Color PRIMARY_COLOR = new Color(65, 105, 225);
     private static final Color SECONDARY_COLOR = new Color(52, 152, 219);
@@ -294,27 +295,84 @@ public class AddPetUIUser extends JFrame {
 
         return true;
     }
+//
+//    private void addPet() {
+//        if (!validateInput()) {
+//            return;
+//        }
+//
+//        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
+//            String sql = "INSERT INTO pets (type, name, species, age_years, age_months) VALUES (?, ?, ?, ?, ?)";
+//            try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+//                pstmt.setString(1, (String) petTypeComboBox.getSelectedItem());
+//                pstmt.setString(2, petNameField.getText().trim());
+//                pstmt.setString(3, petSpeciesField.getText().trim());
+//                pstmt.setInt(4, Integer.parseInt(petAgeYearsField.getText().trim()));
+//                pstmt.setInt(5, Integer.parseInt(petAgeMonthsField.getText().trim()));
+//                pstmt.executeUpdate();
+//            }
+//            JOptionPane.showMessageDialog(this, "Pet added successfully", "Success", JOptionPane.INFORMATION_MESSAGE);
+//            clearFields();
+//        } catch (SQLException ex) {
+//            ex.printStackTrace();
+//            JOptionPane.showMessageDialog(this, "Error adding pet to database", "Database Error", JOptionPane.ERROR_MESSAGE);
+//        }
+//    }
 
     private void addPet() {
         if (!validateInput()) {
             return;
         }
 
-        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
-            String sql = "INSERT INTO pets (type, name, species, age_years, age_months) VALUES (?, ?, ?, ?, ?)";
-            try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
-                pstmt.setString(1, (String) petTypeComboBox.getSelectedItem());
-                pstmt.setString(2, petNameField.getText().trim());
-                pstmt.setString(3, petSpeciesField.getText().trim());
-                pstmt.setInt(4, Integer.parseInt(petAgeYearsField.getText().trim()));
-                pstmt.setInt(5, Integer.parseInt(petAgeMonthsField.getText().trim()));
-                pstmt.executeUpdate();
+        Connection conn = null;
+        try {
+            conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+            conn.setAutoCommit(false); // Start transaction
+
+            // Insert new pet
+            String sqlInsertPet = "INSERT INTO pets (petname, age_years, age_months, species, pettype) VALUES (?, ?, ?, ?, ?)";
+            try (PreparedStatement pstmtInsertPet = conn.prepareStatement(sqlInsertPet, Statement.RETURN_GENERATED_KEYS)) {
+                pstmtInsertPet.setString(1, petNameField.getText().trim());
+                pstmtInsertPet.setInt(2, Integer.parseInt(petAgeYearsField.getText().trim()));
+                pstmtInsertPet.setInt(3, Integer.parseInt(petAgeMonthsField.getText().trim()));
+                pstmtInsertPet.setString(4, petSpeciesField.getText().trim());
+                pstmtInsertPet.setString(5, (String) petTypeComboBox.getSelectedItem());
+                pstmtInsertPet.executeUpdate();
+
+                int loginID = LoginScreen.ID;
+                if(loginID != -1) {
+                    Id = loginID;
+                }
+
+                String sqlUpdateVolunteer = "UPDATE volunteers SET pets_rescued = pets_rescued + 1 WHERE id = ?";
+                try (PreparedStatement pstmtUpdateVolunteer = conn.prepareStatement(sqlUpdateVolunteer)) {
+                    pstmtUpdateVolunteer.setInt(1, Id);
+                    pstmtUpdateVolunteer.executeUpdate();
+                }
             }
-            JOptionPane.showMessageDialog(this, "Pet added successfully", "Success", JOptionPane.INFORMATION_MESSAGE);
+
+            conn.commit(); // Commit transaction
+            JOptionPane.showMessageDialog(this, "Pet added successfully and volunteer's rescued pet count updated", "Success", JOptionPane.INFORMATION_MESSAGE);
             clearFields();
         } catch (SQLException ex) {
+            if (conn != null) {
+                try {
+                    conn.rollback(); // Rollback transaction on error
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
             ex.printStackTrace();
-            JOptionPane.showMessageDialog(this, "Error adding pet to database", "Database Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Error adding pet to database: " + ex.getMessage(), "Database Error", JOptionPane.ERROR_MESSAGE);
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.setAutoCommit(true); // Reset auto-commit to true
+                    conn.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 
