@@ -30,6 +30,7 @@ public class LoginScreen extends JFrame {
         createLoginComponents();
 
         setVisible(true);
+        ///
     }
 
     private void createPanels() {
