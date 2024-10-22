@@ -77,15 +77,36 @@ public class AboutUsPageUser extends JFrame {
     }
 
     private JPanel createFooterPanel() {
-        JPanel footerPanel = new JPanel();
-        footerPanel.setLayout(new BoxLayout(footerPanel, BoxLayout.Y_AXIS));
-        footerPanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
+        JPanel footerPanel = new JPanel(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(10, 10, 10, 10); // Add padding around components
 
-        footerPanel.add(createStyledLabel("Contact Us", Font.BOLD, 24));
-        footerPanel.add(Box.createRigidArea(new Dimension(0, 10)));
-        footerPanel.add(createStyledLabel("Email: petCare@gmail.com", Font.PLAIN, 18));
-        footerPanel.add(createStyledLabel("Phone: +880 1705-094855", Font.PLAIN, 18));
-        footerPanel.add(createStyledLabel("Address: CSE street, CSE, Jahangirnagar University, Dhaka", Font.PLAIN, 18));
+        // Add the logo to the left
+        JLabel logoLabel = new JLabel();
+        ImageIcon logoIcon = new ImageIcon("C://Users//HP//Downloads//logo.png"); // Replace with your logo path
+        Image scaledImage = logoIcon.getImage().getScaledInstance(120, 120, Image.SCALE_SMOOTH); // Adjust size as necessary
+        logoLabel.setIcon(new ImageIcon(scaledImage));
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.gridheight = 3; // Span the height of the contact info
+        gbc.anchor = GridBagConstraints.WEST; // Align to the left
+        footerPanel.add(logoLabel, gbc);
+
+        // Add the "Contact Us" label and contact details to the right of the logo
+        gbc.gridheight = 1; // Reset grid height for contact info
+        gbc.gridx = 1;
+        gbc.gridy = 0;
+        gbc.anchor = GridBagConstraints.NORTHWEST; // Align the contact info with the top of the logo
+        footerPanel.add(createStyledLabel("Contact Us", Font.BOLD, 24), gbc);
+
+        gbc.gridy = 1;
+        footerPanel.add(createStyledLabel("Email: petCare@gmail.com", Font.PLAIN, 18), gbc);
+
+        gbc.gridy = 2;
+        footerPanel.add(createStyledLabel("Phone: +880 1705-094855", Font.PLAIN, 18), gbc);
+
+        gbc.gridy = 3;
+        footerPanel.add(createStyledLabel("Address: CSE street, CSE, Jahangirnagar University", Font.PLAIN, 18), gbc);
 
         return footerPanel;
     }
@@ -93,7 +114,6 @@ public class AboutUsPageUser extends JFrame {
     private JLabel createStyledLabel(String text, int style, int size) {
         JLabel label = new JLabel(text);
         label.setFont(new Font(FONT_FAMILY, style, size));
-        label.setAlignmentX(Component.CENTER_ALIGNMENT);
         return label;
     }
 
