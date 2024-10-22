@@ -79,34 +79,44 @@ public class AboutUsPageVolunteer extends JFrame {
     private JPanel createFooterPanel() {
         JPanel footerPanel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(10, 10, 10, 10); // Add padding around components
+        gbc.insets = new Insets(10, 10, 10, 10);
 
-        // Add the logo to the left
+        // Create a sub-panel with two columns (logo on the left, contact info on the right)
+        JPanel footerContentPanel = new JPanel(new GridBagLayout());
+        GridBagConstraints footerGbc = new GridBagConstraints();
+        footerGbc.insets = new Insets(10, 10, 10, 10);
+
+        // Left column: Add the logo
+        footerGbc.gridx = 0;
+        footerGbc.gridy = 0;
+        footerGbc.gridheight = 4; // Span across the height of the contact info
+        footerGbc.anchor = GridBagConstraints.WEST; // Align to the left
         JLabel logoLabel = new JLabel();
-        ImageIcon logoIcon = new ImageIcon("C://Users//HP//Downloads//logo.png"); // Replace with the correct path to the logo image
-        Image scaledImage = logoIcon.getImage().getScaledInstance(120, 120, Image.SCALE_SMOOTH); // Adjust size as necessary
+        ImageIcon logoIcon = new ImageIcon("C://Users//HP//Downloads//logo.png"); // Replace with your logo path
+        Image scaledImage = logoIcon.getImage().getScaledInstance(150, 150, Image.SCALE_SMOOTH); // Adjust size as necessary
         logoLabel.setIcon(new ImageIcon(scaledImage));
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.gridheight = 3; // Span the height of the contact info
-        gbc.anchor = GridBagConstraints.WEST; // Align to the left
-        footerPanel.add(logoLabel, gbc);
+        footerContentPanel.add(logoLabel, footerGbc);
 
-        // Add the "Contact Us" label and contact details to the right of the logo
-        gbc.gridheight = 1; // Reset grid height for contact info
-        gbc.gridx = 1;
-        gbc.gridy = 0;
-        gbc.anchor = GridBagConstraints.NORTHWEST; // Align the contact info with the top of the logo
-        footerPanel.add(createStyledLabel("Contact Us", Font.BOLD, 24), gbc);
+        // Right column: Add contact info
+        footerGbc.gridheight = 1; // Reset the height for individual rows
+        footerGbc.gridx = 1; // Move to the next column
+        footerGbc.gridy = 0;
+        footerGbc.anchor = GridBagConstraints.WEST; // Align text to the left
 
-        gbc.gridy = 1;
-        footerPanel.add(createStyledLabel("Email: petCare@gmail.com", Font.PLAIN, 18), gbc);
+        footerContentPanel.add(createStyledLabel("Contact Us", Font.BOLD, 24), footerGbc);
 
-        gbc.gridy = 2;
-        footerPanel.add(createStyledLabel("Phone: +880 1705-094855", Font.PLAIN, 18), gbc);
+        footerGbc.gridy = 1;
+        footerContentPanel.add(createStyledLabel("Email: petCare@gmail.com", Font.PLAIN, 16), footerGbc);
 
-        gbc.gridy = 3;
-        footerPanel.add(createStyledLabel("Address: CSE street, CSE, Jahangirnagar University", Font.PLAIN, 18), gbc);
+        footerGbc.gridy = 2;
+        footerContentPanel.add(createStyledLabel("Phone: +880 1705-094855", Font.PLAIN, 16), footerGbc);
+
+        footerGbc.gridy = 3;
+        footerContentPanel.add(createStyledLabel("Address: CSE street, CSE, JU", Font.PLAIN, 16), footerGbc);
+
+        // Add the footer content to the main footer panel
+        gbc.anchor = GridBagConstraints.CENTER;
+        footerPanel.add(footerContentPanel, gbc);
 
         return footerPanel;
     }

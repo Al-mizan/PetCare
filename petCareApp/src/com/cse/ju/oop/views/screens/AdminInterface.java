@@ -71,43 +71,60 @@ public class AdminInterface extends JFrame {
         gbc.weighty = 0.9;
         add(rightPanel, gbc);
     }
+////////////////////////////////
+private void createTopPanel() {
+    JPanel titlePanel = new JPanel(new FlowLayout(FlowLayout.LEFT)); // Use FlowLayout to manage components
+    titlePanel.setOpaque(false); // Make the panel transparent
+//
+    // Load the logo image
+    ImageIcon logoIcon = new ImageIcon("C://Users//HP//Downloads//logo.png"); // Update the path as needed
+    JLabel logoLabel = new JLabel(logoIcon);
 
-    private void createTopPanel() {
-        JLabel titleLabel = new JLabel("Admin");
-        titleLabel.setFont(HEADER_FONT);
-        titleLabel.setForeground(Color.WHITE);
-        titleLabel.setBorder(BorderFactory.createEmptyBorder(10, 50, 10, 0));
-        topPanel.add(titleLabel, BorderLayout.WEST);
+    // Optionally, you can scale the image to a desired size
+    Image logoImage = logoIcon.getImage().getScaledInstance(90, 90, Image.SCALE_SMOOTH); // Scale to 50x50 pixels
+    logoLabel.setIcon(new ImageIcon(logoImage));
 
-        logoutButton = createStyledButton("Logout");
-        logoutButton.setBackground(new Color(255, 69, 0)); // Red background
-        logoutButton.setForeground(Color.WHITE);          // White text
-        logoutButton.setFont(HEADER_FONT);
-//        logoutButton.setFont(new Font("Arial", Font.BOLD, 24));
-        logoutButton.setFocusPainted(false);
-        logoutButton.setBorder(BorderFactory.createLineBorder(Color.RED, 2)); // Red border
+    titlePanel.add(logoLabel); // Add logo to the panel
+    titlePanel.add(Box.createHorizontalStrut(0)); // Add space between logo and title
+    //
 
-        // Add hover effect
-        logoutButton.addMouseListener(new java.awt.event.MouseAdapter() {
-            @Override
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                logoutButton.setBackground(new Color(223, 31, 65)); // Darker red on hover
-            }
+    titlePanel.add(Box.createHorizontalStrut(0)); // Adjust the width as needed
+    JLabel titleLabel = new JLabel("Admin");
+    titleLabel.setFont(HEADER_FONT);
+    titleLabel.setForeground(Color.WHITE);
+    titlePanel.add(titleLabel);
 
-            @Override
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                logoutButton.setBackground(new Color(255, 69, 0)); // Original color
-            }
-        });
+    topPanel.add(titlePanel, BorderLayout.WEST);
 
-        logoutButton.addActionListener(e -> handleLogout());
+    logoutButton = createStyledButton("Logout");
+    logoutButton.setBackground(new Color(255, 69, 0)); // Red background
+    logoutButton.setForeground(Color.WHITE);          // White text
+    logoutButton.setFont(HEADER_FONT);
+    logoutButton.setFocusPainted(false);
+    logoutButton.setBorder(BorderFactory.createLineBorder(Color.RED, 2)); // Red border
 
-        JPanel logoutPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        logoutPanel.setOpaque(false);
-        logoutPanel.add(logoutButton);
-        topPanel.add(logoutPanel, BorderLayout.EAST);
-    }
+    // Add hover effect
+    logoutButton.addMouseListener(new java.awt.event.MouseAdapter() {
+        @Override
+        public void mouseEntered(java.awt.event.MouseEvent evt) {
+            logoutButton.setBackground(new Color(223, 31, 65)); // Darker red on hover
+        }
 
+        @Override
+        public void mouseExited(java.awt.event.MouseEvent evt) {
+            logoutButton.setBackground(new Color(255, 69, 0)); // Original color
+        }
+    });
+
+    logoutButton.addActionListener(e -> handleLogout());
+
+    JPanel logoutPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+    logoutPanel.setOpaque(false);
+    logoutPanel.add(logoutButton);
+    topPanel.add(logoutPanel, BorderLayout.EAST);
+}
+
+    ////////////////////
     private void createLeftPanel() {
         leftPanel.add(Box.createRigidArea(new Dimension(5, 20)));
         addMenuButton("Manage Pets", leftPanel, e -> openPetManagement());

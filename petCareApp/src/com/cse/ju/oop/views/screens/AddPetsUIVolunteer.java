@@ -49,33 +49,44 @@ public class AddPetsUIVolunteer extends JFrame {
         add(sidebarPanel, BorderLayout.WEST);
         add(mainPanel, BorderLayout.CENTER);
     }
+///////////////////////////////////////////////////////////////////////
+private void createSidebarPanel() {
+    sidebarPanel = new JPanel();
+    sidebarPanel.setLayout(new BoxLayout(sidebarPanel, BoxLayout.Y_AXIS));
+    sidebarPanel.setBackground(PRIMARY_COLOR);
+    sidebarPanel.setPreferredSize(new Dimension(250, getHeight()));
+    sidebarPanel.setBorder(new EmptyBorder(20, 0, 20, 0));
 
-    private void createSidebarPanel() {
-        sidebarPanel = new JPanel();
-        sidebarPanel.setLayout(new BoxLayout(sidebarPanel, BoxLayout.Y_AXIS));
-        sidebarPanel.setBackground(PRIMARY_COLOR);
-        sidebarPanel.setPreferredSize(new Dimension(250, getHeight()));
-        sidebarPanel.setBorder(new EmptyBorder(20, 0, 20, 0));
+    // PetCare Title
+    JLabel logoLabel = new JLabel("PetCare");
+    logoLabel.setFont(new Font("Segoe UI", Font.BOLD, 28));
+    logoLabel.setForeground(Color.WHITE);
+    logoLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+    sidebarPanel.add(logoLabel);
 
-        JLabel logoLabel = new JLabel("PetCare");
-        logoLabel.setFont(new Font("Segoe UI", Font.BOLD, 28));
-        logoLabel.setForeground(Color.WHITE);
-        logoLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        sidebarPanel.add(logoLabel);
+    sidebarPanel.add(Box.createRigidArea(new Dimension(0, 50)));
 
-        sidebarPanel.add(Box.createRigidArea(new Dimension(0, 50)));
+    // Add menu buttons
+    createMenuButton("Dashboard", e -> goBack());
+    createMenuButton("Add Pet", e -> {/* Current page */});
+    createMenuButton("Show Pets", e -> openShowPets());
+    createMenuButton("About Us", e -> showAboutUs());
 
-        createMenuButton("Dashboard", e -> goBack());
-        createMenuButton("Add Pet", e -> {/* Current page */});
-        createMenuButton("Show Pets", e -> openShowPets());
-        createMenuButton("About Us", e -> showAboutUs());
+    sidebarPanel.add(Box.createVerticalGlue());
 
-        sidebarPanel.add(Box.createVerticalGlue());
+    // Add the logo above the logout button
+    ImageIcon logoImage = new ImageIcon("C://Users//HP//Downloads//logo.png"); // Ensure the path is correct
+    Image scaledLogo = logoImage.getImage().getScaledInstance(250, 250, Image.SCALE_SMOOTH); // Adjust the size as needed
+    JLabel logoImageLabel = new JLabel(new ImageIcon(scaledLogo));
+    logoImageLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+    sidebarPanel.add(logoImageLabel);
 
-        logoutButton = createMenuButton("Logout", e -> handleLogout());
-        logoutButton.setBackground(new Color(231, 76, 60));
-    }
+    // Logout Button
+    logoutButton = createMenuButton("Logout", e -> handleLogout());
+    logoutButton.setBackground(new Color(231, 76, 60));
+}
 
+    /////////////////////////////////////////////////////////////////
     private void createMainPanel() {
         mainPanel = new JPanel(new BorderLayout());
         mainPanel.setBackground(BACKGROUND_COLOR);
