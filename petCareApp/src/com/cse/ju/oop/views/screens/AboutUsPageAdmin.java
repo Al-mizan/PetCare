@@ -4,7 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 
 public class AboutUsPageAdmin extends JFrame {
-    private static final int WINDOW_WIDTH = 1000;
+    private static final int WINDOW_WIDTH = 900;
     private static final int WINDOW_HEIGHT = 800;
     private static final int PADDING = 20;
     private static final String TITLE = "About Us - Pet Care Organization";
