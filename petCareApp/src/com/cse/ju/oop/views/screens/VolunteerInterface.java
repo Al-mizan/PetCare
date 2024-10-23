@@ -54,13 +54,21 @@ public class VolunteerInterface extends JFrame {
         sidebarPanel.add(logoLabel);
 
         sidebarPanel.add(Box.createRigidArea(new Dimension(0, 50)));
-//        sidebarPanel.add(Box.createRigidArea(new Dimension(5, 20)));
+
         createMenuButton("Dashboard", sidebarPanel, e -> {});
         createMenuButton("Add Pets", sidebarPanel, e -> openAddPets());
         createMenuButton("Show Pets", sidebarPanel, e -> openShowPets());
         createMenuButton("About Us", sidebarPanel, e -> openAboutUs());
 
         sidebarPanel.add(Box.createVerticalGlue());
+
+        // Add logo above logout button
+        JLabel logoImageLabel = new JLabel(new ImageIcon(new ImageIcon("C://Users//HP//Downloads//logo.png")
+                .getImage().getScaledInstance(250, 250, Image.SCALE_SMOOTH)));
+        logoImageLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        sidebarPanel.add(logoImageLabel);
+
+        sidebarPanel.add(Box.createRigidArea(new Dimension(0, 20))); // Spacing before logout
 
         logoutButton = createMenuButton("Logout", sidebarPanel, e -> handleLogout());
         logoutButton.setBackground(new Color(231, 76, 60));
@@ -140,25 +148,53 @@ public class VolunteerInterface extends JFrame {
 
         return button;
     }
+/////
+private JPanel createDashboardCard(String title) {
+    JPanel card = new JPanel(new BorderLayout());
+    card.setBackground(Color.WHITE);
+    card.setBorder(BorderFactory.createLineBorder(new Color(189, 195, 199), 2));
 
-    private JPanel createDashboardCard(String title) {
-        JPanel card = new JPanel(new BorderLayout());
-        card.setBackground(Color.WHITE);
-        card.setBorder(BorderFactory.createLineBorder(new Color(189, 195, 199), 2));
+    JLabel titleLabel = new JLabel(title, SwingConstants.CENTER);
+    titleLabel.setFont(NORMAL_FONT);
+    titleLabel.setBorder(new EmptyBorder(20, 20, 20, 20));
+    card.add(titleLabel, BorderLayout.NORTH);
 
-        JLabel titleLabel = new JLabel(title, SwingConstants.CENTER);
-        titleLabel.setFont(NORMAL_FONT);
-        titleLabel.setBorder(new EmptyBorder(20, 20, 20, 20));
-        card.add(titleLabel, BorderLayout.NORTH);
+    // Update the content based on the card title
+    JLabel contentLabel = new JLabel();
+    contentLabel.setHorizontalAlignment(SwingConstants.CENTER);
+    contentLabel.setBorder(new EmptyBorder(30, 15, 30, 15));
 
-        JLabel contentLabel = new JLabel("Content for " + title);
-        contentLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        contentLabel.setBorder(new EmptyBorder(30, 15, 30, 15));
-        card.add(contentLabel, BorderLayout.CENTER);
-
-        return card;
+    switch (title) {
+        case "Upcoming Tasks":
+            contentLabel.setText("<html><center><strong>Next Week's Tasks:</strong><br>"
+                    + "- Assist with dog vaccinations on Monday<br>"
+                    + "- Help with adoption event setup on Wednesday<br>"
+                    + "- Participate in community pet awareness on Friday</center></html>");
+            break;
+        case "Recent Activities":
+            contentLabel.setText("<html><center><strong>Recent Activities:</strong><br>"
+                    + "- Successfully organized a pet adoption fair<br>"
+                    + "- Helped rescue 3 stray dogs and 2 cats<br>"
+                    + "- Conducted 15 vaccination sessions in the past week</center></html>");
+            break;
+        case "Total Rescues":
+            contentLabel.setText("<html><center><strong>Total Rescues:</strong><br>"
+                    + "Dogs Rescued: 45<br>"
+                    + "Cats Rescued: 32<br>"
+                    + "Other Animals: 12<br>"
+                    + "Total: 89 successful rescues</center></html>");
+            break;
+        default:
+            contentLabel.setText("Content for " + title);
+            break;
     }
 
+    card.add(contentLabel, BorderLayout.CENTER);
+
+    return card;
+}
+
+    /////
     private void openAddPets() {
         SwingUtilities.invokeLater(() -> {
             AddPetsUIVolunteer addPetsUIVolunteer = new AddPetsUIVolunteer();

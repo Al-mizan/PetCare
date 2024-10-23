@@ -53,27 +53,42 @@ public class ShowPetsUIVolunteer extends JFrame {
 
         add(mainPanel);
     }
+///
+private void createTopPanel() {
+    topPanel = new JPanel(new BorderLayout());
+    topPanel.setBackground(Color.WHITE);
+    topPanel.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createMatteBorder(0, 0, 1, 0, new Color(189, 195, 199)),
+            new EmptyBorder(15, 20, 15, 20)
+    ));
 
-    private void createTopPanel() {
-        topPanel = new JPanel(new BorderLayout());
-        topPanel.setBackground(Color.WHITE);
-        topPanel.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createMatteBorder(0, 0, 1, 0, new Color(189, 195, 199)),
-                new EmptyBorder(15, 20, 15, 20)
-        ));
+    // Load and scale the logo
+    ImageIcon originalLogo = new ImageIcon("C://Users//HP//Downloads//logo.png"); // Replace with the correct path to your logo
+    Image logoImage = originalLogo.getImage().getScaledInstance(90, 90, Image.SCALE_SMOOTH); // Adjust width and height as needed
+    ImageIcon scaledLogo = new ImageIcon(logoImage);
 
-        JLabel titleLabel = new JLabel("Show Pets");
-        titleLabel.setFont(HEADER_FONT);
-        titleLabel.setForeground(TEXT_COLOR);
+    JLabel logoLabel = new JLabel(scaledLogo);
 
-        JLabel volunteerLabel = new JLabel("Volunteer Dashboard");
-        volunteerLabel.setFont(NORMAL_FONT);
-        volunteerLabel.setForeground(SECONDARY_COLOR);
+    // Create a panel for the title and center it
+    JPanel titlePanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 0));
+    titlePanel.setBackground(Color.WHITE); // Ensure title panel background is white
 
-        topPanel.add(titleLabel, BorderLayout.WEST);
-        topPanel.add(volunteerLabel, BorderLayout.EAST);
-    }
+    JLabel titleLabel = new JLabel("Show Pets");
+    titleLabel.setFont(HEADER_FONT);
+    titleLabel.setForeground(TEXT_COLOR);
+    titlePanel.add(titleLabel); // Add the title label to the title panel
 
+    // Add the logo, titlePanel, and volunteerLabel to the topPanel
+    topPanel.add(logoLabel, BorderLayout.WEST); // Add logo to the left
+    topPanel.add(titlePanel, BorderLayout.CENTER); // Add the titlePanel to center
+    JLabel volunteerLabel = new JLabel("Volunteer Dashboard");
+    volunteerLabel.setFont(NORMAL_FONT);
+    volunteerLabel.setForeground(SECONDARY_COLOR);
+    topPanel.add(volunteerLabel, BorderLayout.EAST); // Add volunteer label to the right
+}
+
+
+    /////
     private Connection getConnection() throws SQLException {
         String url = "jdbc:mysql://localhost:3306/petCare_db";
         String user = "root";

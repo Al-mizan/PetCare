@@ -62,15 +62,30 @@ public class VolunteerManagementUI extends JFrame {
                 new EmptyBorder(15, 20, 15, 20)
         ));
 
-        JLabel titleLabel = new JLabel("Volunteers Management");
+        // Load the logo image (Make sure the path is correct)
+        ImageIcon logoIcon = new ImageIcon("C://Users//HP//Downloads//logo.png");
+        Image logoImage = logoIcon.getImage().getScaledInstance(90, 90, Image.SCALE_SMOOTH);  // Resize logo to appropriate size
+        JLabel logoLabel = new JLabel(new ImageIcon(logoImage));
+        logoLabel.setHorizontalAlignment(SwingConstants.LEFT);
+
+        // Title label for "Volunteers Management"
+        JLabel titleLabel = new JLabel("                               Volunteers Management");
         titleLabel.setFont(HEADER_FONT);
         titleLabel.setForeground(TEXT_COLOR);
 
+        // Create a panel to hold both the logo and the title
+        JPanel titlePanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 0));
+        titlePanel.setBackground(Color.WHITE);
+        titlePanel.add(logoLabel);
+        titlePanel.add(titleLabel);
+
+        // Admin dashboard label on the right
         JLabel adminLabel = new JLabel("Admin Dashboard");
         adminLabel.setFont(NORMAL_FONT);
         adminLabel.setForeground(SECONDARY_COLOR);
 
-        topPanel.add(titleLabel, BorderLayout.WEST);
+        // Add the title panel (logo + title) and admin label to the top panel
+        topPanel.add(titlePanel, BorderLayout.WEST);
         topPanel.add(adminLabel, BorderLayout.EAST);
     }
 
@@ -222,21 +237,14 @@ public class VolunteerManagementUI extends JFrame {
     }
 
     private void backToDashboard() {
-        int confirm = JOptionPane.showConfirmDialog(this, "Are you sure you want to go back to the dashboard?", "Confirm Exit", JOptionPane.YES_NO_OPTION);
+        int confirm = JOptionPane.showConfirmDialog(this, "Are you sure you want to go back to the dashboard?", "Confirm", JOptionPane.YES_NO_OPTION);
         if (confirm == JOptionPane.YES_OPTION) {
-            new AdminInterface();
-            dispose();
+            dispose(); // Close the current window
+            // Code to navigate back to the dashboard goes here
         }
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            try {
-                UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            new VolunteerManagementUI();
-        });
+        SwingUtilities.invokeLater(VolunteerManagementUI::new);
     }
 }

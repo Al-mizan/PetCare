@@ -47,7 +47,6 @@ public class RegistrationScreen extends JFrame {
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.weightx = 1.0;
 
-
         addFormField(formPanel, gbc, "                             First Name", firstNameField = createStyledTextField());
         addFormField(formPanel, gbc, "                             Surname", lastNameField = createStyledTextField());
         addFormField(formPanel, gbc, "                             Gender", genderComboBox = createStyledComboBox(new String[]{"Male", "Female", "Other"}));
@@ -63,12 +62,29 @@ public class RegistrationScreen extends JFrame {
         scrollPane.getViewport().setOpaque(false);
         mainPanel.add(scrollPane, BorderLayout.CENTER);
 
-        // Bottom panel for the signup button
-        JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 20));
+        // Bottom panel for the logo and signup button
+        JPanel bottomPanel = new JPanel(new BorderLayout(0, 0));
         bottomPanel.setOpaque(false);
+
+        // Add logo above the sign-up button
+        // Load and scale the logo
+        ImageIcon originalLogo = new ImageIcon("C://Users//HP//Downloads//logo.png"); // Replace with the correct path to your logo
+        Image logoImage = originalLogo.getImage().getScaledInstance(163, 163, Image.SCALE_SMOOTH); // Adjust width and height as needed
+        ImageIcon scaledLogo = new ImageIcon(logoImage);
+
+// Add logo above the sign-up button
+        JLabel logoLabel = new JLabel(scaledLogo);
+        logoLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        bottomPanel.add(logoLabel, BorderLayout.NORTH);
+
+
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
+        buttonPanel.setOpaque(false);
         signUpButton = createStyledButton("SIGN UP", new Color(65, 105, 225));
         signUpButton.setForeground(Color.WHITE);
-        bottomPanel.add(signUpButton);
+        buttonPanel.add(signUpButton);
+
+        bottomPanel.add(buttonPanel, BorderLayout.SOUTH);
         mainPanel.add(bottomPanel, BorderLayout.SOUTH);
 
         add(mainPanel);

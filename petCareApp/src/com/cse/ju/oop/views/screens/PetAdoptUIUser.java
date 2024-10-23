@@ -58,24 +58,27 @@ public class PetAdoptUIUser extends JFrame {
         add(leftPanel, BorderLayout.WEST);
         add(rightPanel, BorderLayout.CENTER);
     }
+/////////////////////////////
+private void createLeftPanel() {
+    leftPanel = new JPanel();
+    leftPanel.setLayout(new BorderLayout());
+    leftPanel.setBackground(PRIMARY_COLOR);
+    leftPanel.setPreferredSize(new Dimension(250, getHeight()));
+    leftPanel.setBorder(new EmptyBorder(20, 20, 20, 20));
 
-    private void createLeftPanel() {
-        leftPanel = new JPanel();
-        leftPanel.setLayout(new BorderLayout());
-        leftPanel.setBackground(PRIMARY_COLOR);
-        leftPanel.setPreferredSize(new Dimension(250, getHeight()));
-        leftPanel.setBorder(new EmptyBorder(20, 20, 20, 20));
+    // Load logo image and set it on the JLabel
+    ImageIcon logoIcon = new ImageIcon("C://Users//HP//Downloads//logo.png");
+    Image logoImage = logoIcon.getImage().getScaledInstance(190, 190, Image.SCALE_SMOOTH);  // Resize logo to appropriate size
+    JLabel logoLabel = new JLabel(" ", new ImageIcon(logoImage), JLabel.LEFT);  // Add text and logo
+    logoLabel.setFont(new Font("Segoe UI", Font.BOLD, 28));
+    logoLabel.setForeground(Color.WHITE);
+    logoLabel.setHorizontalAlignment(SwingConstants.CENTER);
+    leftPanel.add(logoLabel, BorderLayout.NORTH);
 
-        JLabel logoLabel = new JLabel("PetCare");
-        logoLabel.setFont(new Font("Segoe UI", Font.BOLD, 28));
-        logoLabel.setForeground(Color.WHITE);
-        logoLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        leftPanel.add(logoLabel, BorderLayout.NORTH);
-
-        createFilterPanel();
-        leftPanel.add(filterPanel, BorderLayout.CENTER);
-    }
-
+    createFilterPanel();
+    leftPanel.add(filterPanel, BorderLayout.CENTER);
+}
+///////////////////////////////
     private void createFilterPanel() {
         filterPanel = new JPanel();
         filterPanel.setLayout(new BoxLayout(filterPanel, BoxLayout.Y_AXIS));
@@ -98,20 +101,25 @@ public class PetAdoptUIUser extends JFrame {
         addFilterSection(filterPanel, "Pet Type", new String[]{"All", "Cat", "Dog", "Bird"}, petTypeGroup);
         addFilterSection(filterPanel, "Age", new String[]{"All", "0-11 months", "1-3 years", "4 years and above"}, ageGroup);
     }
+/////////////////////
+private void createRightPanel() {
+    rightPanel = new JPanel(new BorderLayout());
+    rightPanel.setBackground(BACKGROUND_COLOR);
+    rightPanel.setBorder(new EmptyBorder(20, 20, 20, 20));
 
-    private void createRightPanel() {
-        rightPanel = new JPanel(new BorderLayout());
-        rightPanel.setBackground(BACKGROUND_COLOR);
-        rightPanel.setBorder(new EmptyBorder(20, 20, 20, 20));
+    createTablePanel();
+    createButtonPanel();
 
-        createTablePanel();
-        createButtonPanel();
+    JLabel titleLabel = new JLabel("Pet Adoption", SwingConstants.CENTER);
+    titleLabel.setFont(new Font("Segoe UI", Font.BOLD, 28));  // Adjust font size for title
+    titleLabel.setForeground(TEXT_COLOR);
 
-        rightPanel.add(new JLabel("Pet Adoption", SwingConstants.CENTER), BorderLayout.NORTH);
-        rightPanel.add(tablePanel, BorderLayout.CENTER);
-        rightPanel.add(buttonPanel, BorderLayout.SOUTH);
-    }
+    rightPanel.add(titleLabel, BorderLayout.NORTH);  // Add the title with the new font size
+    rightPanel.add(tablePanel, BorderLayout.CENTER);
+    rightPanel.add(buttonPanel, BorderLayout.SOUTH);
+}
 
+    ////////////////////////
     private void createTablePanel() {
         tablePanel = new JPanel(new BorderLayout());
         tablePanel.setBackground(BACKGROUND_COLOR);

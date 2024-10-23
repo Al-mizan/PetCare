@@ -53,27 +53,45 @@ public class UserManagementUI extends JFrame {
 
         add(mainPanel);
     }
+////
+private void createTopPanel() {
+    topPanel = new JPanel(new BorderLayout());
+    topPanel.setBackground(Color.WHITE);
+    topPanel.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createMatteBorder(0, 0, 1, 0, new Color(189, 195, 199)),
+            new EmptyBorder(15, 20, 15, 20)
+    ));
 
-    private void createTopPanel() {
-        topPanel = new JPanel(new BorderLayout());
-        topPanel.setBackground(Color.WHITE);
-        topPanel.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createMatteBorder(0, 0, 1, 0, new Color(189, 195, 199)),
-                new EmptyBorder(15, 20, 15, 20)
-        ));
+    // Load the logo image (Make sure the path is correct)
+    ImageIcon logoIcon = new ImageIcon("C://Users//HP//Downloads//logo.png");
+    Image logoImage = logoIcon.getImage().getScaledInstance(90, 90, Image.SCALE_SMOOTH);  // Resize logo to appropriate size
+    JLabel logoLabel = new JLabel("                             ", new ImageIcon(logoImage), JLabel.LEFT);  // Add text and logo
+    logoLabel.setFont(new Font("Segoe UI", Font.BOLD, 28));
+    logoLabel.setForeground(Color.WHITE);
+    logoLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
-        JLabel titleLabel = new JLabel("Users Management");
-        titleLabel.setFont(HEADER_FONT);
-        titleLabel.setForeground(TEXT_COLOR);
+    // Title label for "User Management"
+    JLabel titleLabel = new JLabel("Users Management");
+    titleLabel.setFont(HEADER_FONT);
+    titleLabel.setForeground(TEXT_COLOR);
 
-        JLabel adminLabel = new JLabel("Admin Dashboard");
-        adminLabel.setFont(NORMAL_FONT);
-        adminLabel.setForeground(SECONDARY_COLOR);
+    // Create a panel to hold both the logo and the title
+    JPanel titlePanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 0));
+    titlePanel.setBackground(Color.WHITE);
+    titlePanel.add(logoLabel);
+    titlePanel.add(titleLabel);
 
-        topPanel.add(titleLabel, BorderLayout.WEST);
-        topPanel.add(adminLabel, BorderLayout.EAST);
-    }
+    // Admin dashboard label on the right
+    JLabel adminLabel = new JLabel("Admin Dashboard");
+    adminLabel.setFont(NORMAL_FONT);
+    adminLabel.setForeground(SECONDARY_COLOR);
 
+    // Add the title panel (logo + title) and admin label to the top panel
+    topPanel.add(titlePanel, BorderLayout.WEST);
+    topPanel.add(adminLabel, BorderLayout.EAST);
+}
+
+    ////
     private void createContentPanel() {
         contentPanel = new JPanel(new BorderLayout(0, 20));
         contentPanel.setBackground(BACKGROUND_COLOR);

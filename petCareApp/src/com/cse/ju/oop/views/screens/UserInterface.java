@@ -47,21 +47,28 @@ public class UserInterface extends JFrame {
         sidebarPanel.setPreferredSize(new Dimension(250, getHeight()));
         sidebarPanel.setBorder(new EmptyBorder(20, 0, 20, 0));
 
-        JLabel logoLabel = new JLabel("PetCare");
-        logoLabel.setFont(new Font("Segoe UI", Font.BOLD, 28));
-        logoLabel.setForeground(Color.WHITE);
-        logoLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        sidebarPanel.add(logoLabel);
+        JLabel titleLabel = new JLabel("PetCare");
+        titleLabel.setFont(new Font("Segoe UI", Font.BOLD, 28));
+        titleLabel.setForeground(Color.WHITE);
+        titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        sidebarPanel.add(titleLabel);
 
         sidebarPanel.add(Box.createRigidArea(new Dimension(0, 50)));
 
-        sidebarPanel.add(Box.createRigidArea(new Dimension(5, 20)));
         createMenuButton("Dashboard", sidebarPanel, e -> {/* Dashboard action */});
         createMenuButton("Pet Adopt", sidebarPanel, e -> openPetAdopt());
         createMenuButton("Add Pets", sidebarPanel, e -> openAddPet());
         createMenuButton("About Us", sidebarPanel, e -> showAboutUs());
 
         sidebarPanel.add(Box.createVerticalGlue());
+
+        // Add logo above logout button
+        JLabel logoLabel = new JLabel(new ImageIcon(new ImageIcon("C://Users//HP//Downloads//logo.png")
+                .getImage().getScaledInstance(250, 250, Image.SCALE_SMOOTH)));
+        logoLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        sidebarPanel.add(logoLabel);
+
+        sidebarPanel.add(Box.createRigidArea(new Dimension(0, 20))); // Spacing before logout
 
         logoutButton = createMenuButton("Logout", sidebarPanel, e -> handleLogout());
         logoutButton.setBackground(new Color(231, 76, 60));
@@ -160,7 +167,7 @@ public class UserInterface extends JFrame {
 
     private void showAboutUs() {
         SwingUtilities.invokeLater(() -> {
-            AboutUsPageUser aboutUsPageUser = new AboutUsPageUser(); /// create new window for userInterface
+            AboutUsPageUser aboutUsPageUser = new AboutUsPageUser(); // create new window for userInterface
             aboutUsPageUser.setVisible(true);
             dispose();
         });
@@ -169,16 +176,31 @@ public class UserInterface extends JFrame {
     private JPanel createDashboardCard(String title) {
         JPanel card = new JPanel(new BorderLayout());
         card.setBackground(Color.WHITE);
-        card.setBorder(BorderFactory.createLineBorder(new Color(189, 195, 199), 2));
+        card.setBorder(BorderFactory.createLineBorder(new Color(189, 195, 199), 6));
 
         JLabel titleLabel = new JLabel(title, SwingConstants.CENTER);
         titleLabel.setFont(NORMAL_FONT);
         titleLabel.setBorder(new EmptyBorder(20, 20, 20, 20));
         card.add(titleLabel, BorderLayout.NORTH);
 
-        JLabel contentLabel = new JLabel("Content for " + title);
+        // Update the content for each title
+        String contentText;
+        if (title.equals("Pet Adopt")) {
+            contentText = "<html>Explore our wonderful pets available for adoption!<br>" +
+                    "Adopting a pet is a rewarding experience that can change your life.<br>" +
+                    "Click the button on left to view available pets and start the adoption process!</html>";
+        } else if (title.equals("Pet Add")) {
+            contentText = "<html>Want to add a new pet to the system?<br>" +
+                    "Please fill out the details of your pet including species, name, and age.<br>" +
+                    "Click the button on left side to begin the registration process!</html>";
+        } else {
+            contentText = "No content available.";
+        }
+
+        JLabel contentLabel = new JLabel(contentText);
         contentLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        contentLabel.setBorder(new EmptyBorder(30, 15, 30, 15));
+        contentLabel.setBorder(new EmptyBorder(30, 1, 30, 1));
+        contentLabel.setVerticalAlignment(SwingConstants.TOP);
         card.add(contentLabel, BorderLayout.CENTER);
 
         return card;
