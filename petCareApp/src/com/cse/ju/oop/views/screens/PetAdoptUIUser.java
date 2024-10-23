@@ -18,7 +18,6 @@ public class PetAdoptUIUser extends JFrame {
     private JPanel leftPanel, rightPanel, filterPanel, tablePanel, buttonPanel;
     private JTable petTable;
     private DefaultTableModel tableModel;
-    private JButton backButton, adoptButton;
 
     private final Color PRIMARY_COLOR = new Color(65, 105, 225);
     private final Color SECONDARY_COLOR = new Color(52, 152, 219);
@@ -67,7 +66,7 @@ private void createLeftPanel() {
     leftPanel.setBorder(new EmptyBorder(20, 20, 20, 20));
 
     // Load logo image and set it on the JLabel
-    ImageIcon logoIcon = new ImageIcon("C://Users//HP//Downloads//logo.png");
+    ImageIcon logoIcon = new ImageIcon("/home/almizan/PetCare/petCareApp/src/com/cse/ju/oop/views/screens/logo.png");
     Image logoImage = logoIcon.getImage().getScaledInstance(190, 190, Image.SCALE_SMOOTH);  // Resize logo to appropriate size
     JLabel logoLabel = new JLabel(" ", new ImageIcon(logoImage), JLabel.LEFT);  // Add text and logo
     logoLabel.setFont(new Font("Segoe UI", Font.BOLD, 28));
@@ -135,8 +134,8 @@ private void createRightPanel() {
         buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
         buttonPanel.setBackground(BACKGROUND_COLOR);
 
-        adoptButton = createStyledButton("Adopt");
-        backButton = createStyledButton("Back");
+        JButton adoptButton = createStyledButton("Adopt");
+        JButton backButton = createStyledButton("Back");
 
         adoptButton.addActionListener(e -> handleAdopt());
         backButton.addActionListener(e -> handleBack());

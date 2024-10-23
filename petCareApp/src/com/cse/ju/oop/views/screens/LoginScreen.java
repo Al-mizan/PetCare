@@ -10,8 +10,6 @@ public class LoginScreen extends JFrame {
     private JPasswordField passText;
     private JComboBox<String> roleComboBox;
     private JPanel leftPanel, rightPanel;
-    private JLabel logoLabel, welcomeLabel;
-    private JButton loginButton, signUpButton;
 
     // Database connection details
     private static final String DB_URL = "jdbc:mysql://localhost:3306/petCare_db";
@@ -30,7 +28,6 @@ public class LoginScreen extends JFrame {
         createLoginComponents();
 
         setVisible(true);
-        ///
     }
 
     private void createPanels() {
@@ -66,12 +63,12 @@ private void createLoginComponents() {
     gbc.insets = new Insets(10, 10, 10, 10);
 
     // Load and scale the logo image
-    ImageIcon logoIcon = new ImageIcon("C://Users//HP//Downloads//logo.png"); // Specify your logo file path
+    ImageIcon logoIcon = new ImageIcon("/home/almizan/PetCare/petCareApp/src/com/cse/ju/oop/views/screens/logo.png"); // Specify your logo file path
     Image logoImage = logoIcon.getImage().getScaledInstance(250, 250, Image.SCALE_SMOOTH); // Resize the logo
     ImageIcon resizedLogoIcon = new ImageIcon(logoImage); // Create a resized ImageIcon
 
     // Add the logo above the slogan
-    logoLabel = new JLabel(resizedLogoIcon);
+    JLabel logoLabel = new JLabel(resizedLogoIcon);
     gbc.gridy = 0; // Positioned at the top
     leftPanel.add(logoLabel, gbc);
 
@@ -83,7 +80,7 @@ private void createLoginComponents() {
     leftPanel.add(sloganLabel, gbc);
 
     // Right panel components
-    welcomeLabel = new JLabel("Welcome Back!");
+    JLabel welcomeLabel = new JLabel("Welcome Back!");
     welcomeLabel.setFont(new Font("Arial", Font.BOLD, 36));
     gbc.gridx = 0;
     gbc.gridy = 0;
@@ -97,12 +94,12 @@ private void createLoginComponents() {
     // Set equal width for the fields and buttons
     Dimension commonDimension = new Dimension(285, 50);
 
-    userText = createStyledTextField("Username");
+    userText = createStyledTextField();
     userText.setPreferredSize(commonDimension);
     gbc.gridy = 1;
     rightPanel.add(userText, gbc);
 
-    passText = createStyledPasswordField("Password");
+    passText = createStyledPasswordField();
     passText.setPreferredSize(commonDimension);
     gbc.gridy = 2;
     rightPanel.add(passText, gbc);
@@ -114,7 +111,7 @@ private void createLoginComponents() {
     gbc.gridy = 3;
     rightPanel.add(roleComboBox, gbc);
 
-    loginButton = createStyledButton("Login", new Color(65, 105, 225));
+    JButton loginButton = createStyledButton("Login", new Color(65, 105, 225));
     loginButton.setPreferredSize(commonDimension);
     gbc.gridy = 4;
     gbc.gridwidth = 2;
@@ -128,7 +125,7 @@ private void createLoginComponents() {
     rightPanel.add(label, gbc);
     gbc.gridx = 1;
 
-    signUpButton = createStyledButton("Create Account", new Color(80, 112, 211));
+    JButton signUpButton = createStyledButton("Create Account", new Color(80, 112, 211));
     signUpButton.setPreferredSize(commonDimension);
     gbc.gridx = 0;
     gbc.gridy = 6;
@@ -146,7 +143,7 @@ private void createLoginComponents() {
 }
 
     ///////////////////
-    private JTextField createStyledTextField(String placeholder) {
+    private JTextField createStyledTextField() {
         JTextField textField = new JTextField(20);
         textField.setPreferredSize(new Dimension(300, 50));
         textField.setFont(new Font("Arial", Font.PLAIN, 16));
@@ -154,11 +151,11 @@ private void createLoginComponents() {
                 BorderFactory.createLineBorder(new Color(200, 200, 200)),
                 BorderFactory.createEmptyBorder(5, 10, 5, 10)
         ));
-        addPlaceholderStyle(textField, placeholder);
+        addPlaceholderStyle(textField, "Username");
         return textField;
     }
 
-    private JPasswordField createStyledPasswordField(String placeholder) {
+    private JPasswordField createStyledPasswordField() {
         JPasswordField passwordField = new JPasswordField(20);
         passwordField.setPreferredSize(new Dimension(300, 50));
         passwordField.setFont(new Font("Arial", Font.PLAIN, 16));
@@ -166,7 +163,7 @@ private void createLoginComponents() {
                 BorderFactory.createLineBorder(new Color(200, 200, 200)),
                 BorderFactory.createEmptyBorder(5, 10, 5, 10)
         ));
-        addPlaceholderStyle(passwordField, placeholder);
+        addPlaceholderStyle(passwordField, "Password");
         return passwordField;
     }
 
@@ -245,6 +242,7 @@ private void createLoginComponents() {
             return;
         }
 
+        assert selectedRole != null;
         if (authenticateUser(username, password, selectedRole)) {
             switch (selectedRole) {
                 case "Admin":

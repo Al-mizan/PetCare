@@ -10,7 +10,6 @@ import java.sql.*;
 
 public class AddPetsUIVolunteer extends JFrame {
     private JPanel sidebarPanel, mainPanel, headerPanel, contentPanel;
-    private JButton logoutButton;
     private JComboBox<String> petTypeComboBox;
     private JTextField petNameField, petSpeciesField, petAgeYearsField, petAgeMonthsField;
     private int volunteerId;
@@ -75,14 +74,14 @@ private void createSidebarPanel() {
     sidebarPanel.add(Box.createVerticalGlue());
 
     // Add the logo above the logout button
-    ImageIcon logoImage = new ImageIcon("C://Users//HP//Downloads//logo.png"); // Ensure the path is correct
+    ImageIcon logoImage = new ImageIcon("/home/almizan/PetCare/petCareApp/src/com/cse/ju/oop/views/screens/logo.png"); // Ensure the path is correct
     Image scaledLogo = logoImage.getImage().getScaledInstance(250, 250, Image.SCALE_SMOOTH); // Adjust the size as needed
     JLabel logoImageLabel = new JLabel(new ImageIcon(scaledLogo));
     logoImageLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
     sidebarPanel.add(logoImageLabel);
 
     // Logout Button
-    logoutButton = createMenuButton("Logout", e -> handleLogout());
+    JButton logoutButton = createMenuButton("Logout", e -> handleLogout());
     logoutButton.setBackground(new Color(231, 76, 60));
 }
 
@@ -212,9 +211,9 @@ private void createSidebarPanel() {
         panel.add(component, gbc);
 
         if (component instanceof JTextField) {
-            ((JTextField) component).setFont(NORMAL_FONT);
+            component.setFont(NORMAL_FONT);
         } else if (component instanceof JComboBox) {
-            ((JComboBox<?>) component).setFont(NORMAL_FONT);
+            component.setFont(NORMAL_FONT);
         }
     }
 
@@ -378,7 +377,6 @@ private void createSidebarPanel() {
                 "Are you sure you want to logout?", "Confirm Logout",
                 JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
         if (confirm == JOptionPane.YES_OPTION) {
-            // TODO: Implement actual logout logic
             new LoginScreen().setVisible(true);
             dispose();
         }

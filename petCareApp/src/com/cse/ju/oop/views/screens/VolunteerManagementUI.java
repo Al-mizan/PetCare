@@ -11,9 +11,10 @@ import java.awt.event.MouseEvent;
 import java.sql.*;
 
 public class VolunteerManagementUI extends JFrame {
-    private JPanel mainPanel, topPanel, contentPanel, bottomPanel;
+    private JPanel topPanel;
+    private JPanel contentPanel;
+    private JPanel bottomPanel;
     private JTable volunteerTable;
-    private JButton deleteButton, backButton;
     private final Color PRIMARY_COLOR = new Color(41, 128, 185);
     private final Color SECONDARY_COLOR = new Color(52, 152, 219);
     private final Color BACKGROUND_COLOR = new Color(236, 240, 241);
@@ -39,7 +40,7 @@ public class VolunteerManagementUI extends JFrame {
     }
 
     private void createPanels() {
-        mainPanel = new JPanel(new BorderLayout(10, 10));
+        JPanel mainPanel = new JPanel(new BorderLayout(10, 10));
         mainPanel.setBackground(BACKGROUND_COLOR);
         mainPanel.setBorder(new EmptyBorder(20, 20, 20, 20));
 
@@ -63,8 +64,21 @@ public class VolunteerManagementUI extends JFrame {
         ));
 
         // Load the logo image (Make sure the path is correct)
-        ImageIcon logoIcon = new ImageIcon("C://Users//HP//Downloads//logo.png");
+        ImageIcon logoIcon = new ImageIcon("/home/almizan/PetCare/petCareApp/src/com/cse/ju/oop/views/screens/logo.png");
         Image logoImage = logoIcon.getImage().getScaledInstance(90, 90, Image.SCALE_SMOOTH);  // Resize logo to appropriate size
+        JPanel titlePanel = getjPanel(logoImage);
+
+        // Admin dashboard label on the right
+        JLabel adminLabel = new JLabel("Admin Dashboard");
+        adminLabel.setFont(NORMAL_FONT);
+        adminLabel.setForeground(SECONDARY_COLOR);
+
+        // Add the title panel (logo + title) and admin label to the top panel
+        topPanel.add(titlePanel, BorderLayout.WEST);
+        topPanel.add(adminLabel, BorderLayout.EAST);
+    }
+
+    private JPanel getjPanel(Image logoImage) {
         JLabel logoLabel = new JLabel(new ImageIcon(logoImage));
         logoLabel.setHorizontalAlignment(SwingConstants.LEFT);
 
@@ -78,15 +92,7 @@ public class VolunteerManagementUI extends JFrame {
         titlePanel.setBackground(Color.WHITE);
         titlePanel.add(logoLabel);
         titlePanel.add(titleLabel);
-
-        // Admin dashboard label on the right
-        JLabel adminLabel = new JLabel("Admin Dashboard");
-        adminLabel.setFont(NORMAL_FONT);
-        adminLabel.setForeground(SECONDARY_COLOR);
-
-        // Add the title panel (logo + title) and admin label to the top panel
-        topPanel.add(titlePanel, BorderLayout.WEST);
-        topPanel.add(adminLabel, BorderLayout.EAST);
+        return titlePanel;
     }
 
     private void createContentPanel() {
@@ -131,8 +137,8 @@ public class VolunteerManagementUI extends JFrame {
         bottomPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 0));
         bottomPanel.setBackground(BACKGROUND_COLOR);
 
-        deleteButton = createStyledButton("Delete");
-        backButton = createStyledButton("Back");
+        JButton deleteButton = createStyledButton("Delete");
+        JButton backButton = createStyledButton("Back");
 
         deleteButton.addActionListener(e -> deleteVolunteer());
         backButton.addActionListener(e -> backToDashboard());
@@ -239,8 +245,8 @@ public class VolunteerManagementUI extends JFrame {
     private void backToDashboard() {
         int confirm = JOptionPane.showConfirmDialog(this, "Are you sure you want to go back to the dashboard?", "Confirm", JOptionPane.YES_NO_OPTION);
         if (confirm == JOptionPane.YES_OPTION) {
-            dispose(); // Close the current window
-            // Code to navigate back to the dashboard goes here
+            new AdminInterface();
+            dispose();
         }
     }
 

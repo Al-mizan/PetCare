@@ -5,10 +5,9 @@ import java.awt.*;
 import java.sql.*;
 
 public class RegistrationScreen extends JFrame {
-    private JTextField firstNameField, lastNameField, userNameField, phoneField, emailField;
-    private JComboBox<String> genderComboBox, roleComboBox;
-    private JButton signUpButton, backButton;
-    private JPasswordField passwordField;
+    private final JTextField firstNameField, lastNameField, userNameField, phoneField, emailField;
+    private final JComboBox<String> genderComboBox, roleComboBox;
+    private final JPasswordField passwordField;
 
     // Database connection details
     private static final String DB_URL = "jdbc:mysql://localhost:3306/petCare_db";
@@ -29,7 +28,7 @@ public class RegistrationScreen extends JFrame {
         // Top panel for back button and title
         JPanel topPanel = new JPanel(new BorderLayout(20, 20));
         topPanel.setOpaque(false);
-        backButton = createStyledButton("← Back", new Color(100, 100, 100));
+        JButton backButton = createStyledButton("← Back", new Color(100, 100, 100));
         topPanel.add(backButton, BorderLayout.WEST);
 
         JLabel titleLabel = new JLabel("Sign Up to Pet Care", SwingConstants.CENTER);
@@ -68,7 +67,7 @@ public class RegistrationScreen extends JFrame {
 
         // Add logo above the sign-up button
         // Load and scale the logo
-        ImageIcon originalLogo = new ImageIcon("C://Users//HP//Downloads//logo.png"); // Replace with the correct path to your logo
+        ImageIcon originalLogo = new ImageIcon("/home/almizan/PetCare/petCareApp/src/com/cse/ju/oop/views/screens/logo.png"); // Replace with the correct path to your logo
         Image logoImage = originalLogo.getImage().getScaledInstance(163, 163, Image.SCALE_SMOOTH); // Adjust width and height as needed
         ImageIcon scaledLogo = new ImageIcon(logoImage);
 
@@ -80,7 +79,7 @@ public class RegistrationScreen extends JFrame {
 
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
         buttonPanel.setOpaque(false);
-        signUpButton = createStyledButton("SIGN UP", new Color(65, 105, 225));
+        JButton signUpButton = createStyledButton("SIGN UP", new Color(65, 105, 225));
         signUpButton.setForeground(Color.WHITE);
         buttonPanel.add(signUpButton);
 

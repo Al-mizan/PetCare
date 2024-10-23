@@ -11,9 +11,10 @@ import java.awt.event.MouseEvent;
 import java.sql.*;
 
 public class ShowPetsUIVolunteer extends JFrame {
-    private JPanel mainPanel, topPanel, contentPanel, bottomPanel;
+    private JPanel topPanel;
+    private JPanel contentPanel;
+    private JPanel bottomPanel;
     private JTable petTable;
-    private JButton backButton;
     private final Color PRIMARY_COLOR = new Color(41, 128, 185);
     private final Color SECONDARY_COLOR = new Color(52, 152, 219);
     private final Color BACKGROUND_COLOR = new Color(236, 240, 241);
@@ -39,7 +40,7 @@ public class ShowPetsUIVolunteer extends JFrame {
     }
 
     private void createPanels() {
-        mainPanel = new JPanel(new BorderLayout(10, 10));
+        JPanel mainPanel = new JPanel(new BorderLayout(10, 10));
         mainPanel.setBackground(BACKGROUND_COLOR);
         mainPanel.setBorder(new EmptyBorder(20, 20, 20, 20));
 
@@ -63,7 +64,7 @@ private void createTopPanel() {
     ));
 
     // Load and scale the logo
-    ImageIcon originalLogo = new ImageIcon("C://Users//HP//Downloads//logo.png"); // Replace with the correct path to your logo
+    ImageIcon originalLogo = new ImageIcon("/home/almizan/PetCare/petCareApp/src/com/cse/ju/oop/views/screens/logo.png"); // Replace with the correct path to your logo
     Image logoImage = originalLogo.getImage().getScaledInstance(90, 90, Image.SCALE_SMOOTH); // Adjust width and height as needed
     ImageIcon scaledLogo = new ImageIcon(logoImage);
 
@@ -166,7 +167,7 @@ private void createTopPanel() {
         bottomPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 0));
         bottomPanel.setBackground(BACKGROUND_COLOR);
 
-        backButton = createStyledButton("Back to Dashboard");
+        JButton backButton = createStyledButton("Back to Dashboard");
 
         backButton.addActionListener(e -> backToDashboard());
 

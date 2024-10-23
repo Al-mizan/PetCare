@@ -9,7 +9,6 @@ import java.awt.event.MouseEvent;
 
 public class UserInterface extends JFrame {
     private JPanel sidebarPanel, mainPanel, headerPanel, contentPanel;
-    private JButton logoutButton;
     private final Color PRIMARY_COLOR = new Color(65, 105, 225);
     private final Color SECONDARY_COLOR = new Color(52, 152, 219);
     private final Color BACKGROUND_COLOR = new Color(236, 240, 241);
@@ -63,14 +62,14 @@ public class UserInterface extends JFrame {
         sidebarPanel.add(Box.createVerticalGlue());
 
         // Add logo above logout button
-        JLabel logoLabel = new JLabel(new ImageIcon(new ImageIcon("C://Users//HP//Downloads//logo.png")
+        JLabel logoLabel = new JLabel(new ImageIcon(new ImageIcon("/home/almizan/PetCare/petCareApp/src/com/cse/ju/oop/views/screens/logo.png")
                 .getImage().getScaledInstance(250, 250, Image.SCALE_SMOOTH)));
         logoLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         sidebarPanel.add(logoLabel);
 
         sidebarPanel.add(Box.createRigidArea(new Dimension(0, 20))); // Spacing before logout
 
-        logoutButton = createMenuButton("Logout", sidebarPanel, e -> handleLogout());
+        JButton logoutButton = createMenuButton("Logout", sidebarPanel, e -> handleLogout());
         logoutButton.setBackground(new Color(231, 76, 60));
     }
 

@@ -11,9 +11,10 @@ import java.awt.event.MouseEvent;
 import java.sql.*;
 
 public class UserManagementUI extends JFrame {
-    private JPanel mainPanel, topPanel, contentPanel, bottomPanel;
+    private JPanel topPanel;
+    private JPanel contentPanel;
+    private JPanel bottomPanel;
     private JTable userTable;
-    private JButton deleteButton, backButton;
     private final Color PRIMARY_COLOR = new Color(41, 128, 185);
     private final Color SECONDARY_COLOR = new Color(52, 152, 219);
     private final Color BACKGROUND_COLOR = new Color(236, 240, 241);
@@ -39,7 +40,7 @@ public class UserManagementUI extends JFrame {
     }
 
     private void createPanels() {
-        mainPanel = new JPanel(new BorderLayout(10, 10));
+        JPanel mainPanel = new JPanel(new BorderLayout(10, 10));
         mainPanel.setBackground(BACKGROUND_COLOR);
         mainPanel.setBorder(new EmptyBorder(20, 20, 20, 20));
 
@@ -63,23 +64,9 @@ private void createTopPanel() {
     ));
 
     // Load the logo image (Make sure the path is correct)
-    ImageIcon logoIcon = new ImageIcon("C://Users//HP//Downloads//logo.png");
+    ImageIcon logoIcon = new ImageIcon("/home/almizan/PetCare/petCareApp/src/com/cse/ju/oop/views/screens/logo.png");
     Image logoImage = logoIcon.getImage().getScaledInstance(90, 90, Image.SCALE_SMOOTH);  // Resize logo to appropriate size
-    JLabel logoLabel = new JLabel("                             ", new ImageIcon(logoImage), JLabel.LEFT);  // Add text and logo
-    logoLabel.setFont(new Font("Segoe UI", Font.BOLD, 28));
-    logoLabel.setForeground(Color.WHITE);
-    logoLabel.setHorizontalAlignment(SwingConstants.CENTER);
-
-    // Title label for "User Management"
-    JLabel titleLabel = new JLabel("Users Management");
-    titleLabel.setFont(HEADER_FONT);
-    titleLabel.setForeground(TEXT_COLOR);
-
-    // Create a panel to hold both the logo and the title
-    JPanel titlePanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 0));
-    titlePanel.setBackground(Color.WHITE);
-    titlePanel.add(logoLabel);
-    titlePanel.add(titleLabel);
+    JPanel titlePanel = getjPanel(logoImage);
 
     // Admin dashboard label on the right
     JLabel adminLabel = new JLabel("Admin Dashboard");
@@ -90,6 +77,25 @@ private void createTopPanel() {
     topPanel.add(titlePanel, BorderLayout.WEST);
     topPanel.add(adminLabel, BorderLayout.EAST);
 }
+
+    private JPanel getjPanel(Image logoImage) {
+        JLabel logoLabel = new JLabel("                             ", new ImageIcon(logoImage), JLabel.LEFT);  // Add text and logo
+        logoLabel.setFont(new Font("Segoe UI", Font.BOLD, 28));
+        logoLabel.setForeground(Color.WHITE);
+        logoLabel.setHorizontalAlignment(SwingConstants.CENTER);
+
+        // Title label for "User Management"
+        JLabel titleLabel = new JLabel("Users Management");
+        titleLabel.setFont(HEADER_FONT);
+        titleLabel.setForeground(TEXT_COLOR);
+
+        // Create a panel to hold both the logo and the title
+        JPanel titlePanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 0));
+        titlePanel.setBackground(Color.WHITE);
+        titlePanel.add(logoLabel);
+        titlePanel.add(titleLabel);
+        return titlePanel;
+    }
 
     ////
     private void createContentPanel() {
@@ -134,8 +140,8 @@ private void createTopPanel() {
         bottomPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 0));
         bottomPanel.setBackground(BACKGROUND_COLOR);
 
-        deleteButton = createStyledButton("Delete");
-        backButton = createStyledButton("Back");
+        JButton deleteButton = createStyledButton("Delete");
+        JButton backButton = createStyledButton("Back");
 
         deleteButton.addActionListener(e -> deleteUser());
         backButton.addActionListener(e -> backToDashboard());

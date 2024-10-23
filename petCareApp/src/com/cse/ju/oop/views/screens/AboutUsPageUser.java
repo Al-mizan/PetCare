@@ -92,7 +92,7 @@ public class AboutUsPageUser extends JFrame {
         footerGbc.gridheight = 4; // Span across the height of the contact info
         footerGbc.anchor = GridBagConstraints.WEST; // Align to the left
         JLabel logoLabel = new JLabel();
-        ImageIcon logoIcon = new ImageIcon("C://Users//HP//Downloads//logo.png"); // Replace with your logo path
+        ImageIcon logoIcon = new ImageIcon("/home/almizan/PetCare/petCareApp/src/com/cse/ju/oop/views/screens/logo.png"); // Replace with your logo path
         Image scaledImage = logoIcon.getImage().getScaledInstance(150, 150, Image.SCALE_SMOOTH); // Adjust size as necessary
         logoLabel.setIcon(new ImageIcon(scaledImage));
         footerContentPanel.add(logoLabel, footerGbc);

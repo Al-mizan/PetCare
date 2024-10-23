@@ -77,7 +77,7 @@ private void createTopPanel() {
     titlePanel.setOpaque(false); // Make the panel transparent
 //
     // Load the logo image
-    ImageIcon logoIcon = new ImageIcon("C://Users//HP//Downloads//logo.png"); // Update the path as needed
+    ImageIcon logoIcon = new ImageIcon("/home/almizan/PetCare/petCareApp/src/com/cse/ju/oop/views/screens/logo.png"); // Update the path as needed
     JLabel logoLabel = new JLabel(logoIcon);
 
     // Optionally, you can scale the image to a desired size
