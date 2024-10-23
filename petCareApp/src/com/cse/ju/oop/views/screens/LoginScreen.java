@@ -92,27 +92,27 @@ private void createLoginComponents() {
     gbc.gridwidth = 1;
 
     // Set equal width for the fields and buttons
-    Dimension commonDimension = new Dimension(285, 50);
+//    Dimension commonDimension = new Dimension(285, 50);
 
     userText = createStyledTextField();
-    userText.setPreferredSize(commonDimension);
+//    userText.setPreferredSize(commonDimension);
     gbc.gridy = 1;
     rightPanel.add(userText, gbc);
 
     passText = createStyledPasswordField();
-    passText.setPreferredSize(commonDimension);
+//    passText.setPreferredSize(commonDimension);
     gbc.gridy = 2;
     rightPanel.add(passText, gbc);
 
     String[] roles = {"User", "Admin", "Volunteer"};
     roleComboBox = new JComboBox<>(roles);
     styleComboBox(roleComboBox);
-    roleComboBox.setPreferredSize(commonDimension);
+//    roleComboBox.setPreferredSize(commonDimension);
     gbc.gridy = 3;
     rightPanel.add(roleComboBox, gbc);
 
     JButton loginButton = createStyledButton("Login", new Color(65, 105, 225));
-    loginButton.setPreferredSize(commonDimension);
+//    loginButton.setPreferredSize(commonDimension);
     gbc.gridy = 4;
     gbc.gridwidth = 2;
     gbc.fill = GridBagConstraints.HORIZONTAL;
@@ -126,7 +126,7 @@ private void createLoginComponents() {
     gbc.gridx = 1;
 
     JButton signUpButton = createStyledButton("Create Account", new Color(80, 112, 211));
-    signUpButton.setPreferredSize(commonDimension);
+//    signUpButton.setPreferredSize(commonDimension);
     gbc.gridx = 0;
     gbc.gridy = 6;
     rightPanel.add(signUpButton, gbc);
@@ -182,6 +182,38 @@ private void createLoginComponents() {
         button.setBorderPainted(false);
         button.setFocusPainted(false);
         button.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        Color originalColor = color;
+        // Create a slightly darker color for hover effect
+        Color darkerColor = new Color(
+                Math.max((int)(originalColor.getRed() * 0.8), 0),
+                Math.max((int)(originalColor.getGreen() * 0.8), 0),
+                Math.max((int)(originalColor.getBlue() * 0.8), 0)
+        );
+        // Add mouse listeners for hover effect
+        button.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                button.setBackground(darkerColor);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                button.setBackground(originalColor);
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                // Optional: Make the button slightly darker when pressed
+                button.setBackground(darkerColor.darker());
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                // Return to hover color if still hovering
+                button.setBackground(darkerColor);
+            }
+        });
+
         return button;
     }
 

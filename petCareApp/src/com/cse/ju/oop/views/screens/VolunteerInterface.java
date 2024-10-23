@@ -154,7 +154,7 @@ private JPanel createDashboardCard(String title) {
     card.setBorder(BorderFactory.createLineBorder(new Color(189, 195, 199), 2));
 
     JLabel titleLabel = new JLabel(title, SwingConstants.CENTER);
-    titleLabel.setFont(NORMAL_FONT);
+    titleLabel.setFont(new Font("Segoe UI", Font.BOLD, 24));
     titleLabel.setBorder(new EmptyBorder(20, 20, 20, 20));
     card.add(titleLabel, BorderLayout.NORTH);
 

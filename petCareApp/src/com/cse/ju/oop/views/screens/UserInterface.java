@@ -177,21 +177,24 @@ public class UserInterface extends JFrame {
         card.setBackground(Color.WHITE);
         card.setBorder(BorderFactory.createLineBorder(new Color(189, 195, 199), 6));
 
+        // Title with larger, bold font
         JLabel titleLabel = new JLabel(title, SwingConstants.CENTER);
-        titleLabel.setFont(NORMAL_FONT);
+        titleLabel.setFont(new Font("Segoe UI", Font.BOLD, 24));
         titleLabel.setBorder(new EmptyBorder(20, 20, 20, 20));
         card.add(titleLabel, BorderLayout.NORTH);
 
         // Update the content for each title
         String contentText;
         if (title.equals("Pet Adopt")) {
-            contentText = "<html>Explore our wonderful pets available for adoption!<br>" +
+            contentText = "<html><div style='font-size: 12px; line-height: 1.5;'>" +
+                    "Explore our wonderful pets available for adoption!<br>" +
                     "Adopting a pet is a rewarding experience that can change your life.<br>" +
-                    "Click the button on left to view available pets and start the adoption process!</html>";
+                    "Click the button on left to view available pets and start the adoption process!</div></html>";
         } else if (title.equals("Pet Add")) {
-            contentText = "<html>Want to add a new pet to the system?<br>" +
+            contentText = "<html><div style='font-size: 12px; line-height: 1.5;'>" +
+                    "Want to add a new pet to the system?<br>" +
                     "Please fill out the details of your pet including species, name, and age.<br>" +
-                    "Click the button on left side to begin the registration process!</html>";
+                    "Click the button on left side to begin the registration process!</div></html>";
         } else {
             contentText = "No content available.";
         }

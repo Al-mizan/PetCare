@@ -28,8 +28,23 @@ public class RegistrationScreen extends JFrame {
         // Top panel for back button and title
         JPanel topPanel = new JPanel(new BorderLayout(20, 20));
         topPanel.setOpaque(false);
+
+        // Create left panel for back button and logo
+        JPanel leftPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 0));
+        leftPanel.setOpaque(false);
+
+        // Add back button
         JButton backButton = createStyledButton("← Back", new Color(100, 100, 100));
-        topPanel.add(backButton, BorderLayout.WEST);
+        leftPanel.add(backButton);
+
+        // Add logo
+        ImageIcon originalLogo = new ImageIcon("/home/almizan/PetCare/petCareApp/src/com/cse/ju/oop/views/screens/logo.png");
+        Image logoImage = originalLogo.getImage().getScaledInstance(150, 150, Image.SCALE_SMOOTH); // Smaller size to fit beside title
+        ImageIcon scaledLogo = new ImageIcon(logoImage);
+        JLabel logoLabel = new JLabel(scaledLogo);
+        leftPanel.add(logoLabel);
+
+        topPanel.add(leftPanel, BorderLayout.WEST);
 
         JLabel titleLabel = new JLabel("Sign Up to Pet Care", SwingConstants.CENTER);
         titleLabel.setFont(new Font("Arial", Font.BOLD, 32));
@@ -61,29 +76,16 @@ public class RegistrationScreen extends JFrame {
         scrollPane.getViewport().setOpaque(false);
         mainPanel.add(scrollPane, BorderLayout.CENTER);
 
-        // Bottom panel for the logo and signup button
         JPanel bottomPanel = new JPanel(new BorderLayout(0, 0));
         bottomPanel.setOpaque(false);
 
-        // Add logo above the sign-up button
-        // Load and scale the logo
-        ImageIcon originalLogo = new ImageIcon("/home/almizan/PetCare/petCareApp/src/com/cse/ju/oop/views/screens/logo.png"); // Replace with the correct path to your logo
-        Image logoImage = originalLogo.getImage().getScaledInstance(163, 163, Image.SCALE_SMOOTH); // Adjust width and height as needed
-        ImageIcon scaledLogo = new ImageIcon(logoImage);
-
-// Add logo above the sign-up button
-        JLabel logoLabel = new JLabel(scaledLogo);
-        logoLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        bottomPanel.add(logoLabel, BorderLayout.NORTH);
-
-
-        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 20)); // Added vertical padding
         buttonPanel.setOpaque(false);
         JButton signUpButton = createStyledButton("SIGN UP", new Color(65, 105, 225));
         signUpButton.setForeground(Color.WHITE);
         buttonPanel.add(signUpButton);
 
-        bottomPanel.add(buttonPanel, BorderLayout.SOUTH);
+        bottomPanel.add(buttonPanel, BorderLayout.CENTER);
         mainPanel.add(bottomPanel, BorderLayout.SOUTH);
 
         add(mainPanel);
