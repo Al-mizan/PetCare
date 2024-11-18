@@ -91,28 +91,21 @@ private void createLoginComponents() {
     gbc.anchor = GridBagConstraints.WEST;
     gbc.gridwidth = 1;
 
-    // Set equal width for the fields and buttons
-//    Dimension commonDimension = new Dimension(285, 50);
-
     userText = createStyledTextField();
-//    userText.setPreferredSize(commonDimension);
     gbc.gridy = 1;
     rightPanel.add(userText, gbc);
 
     passText = createStyledPasswordField();
-//    passText.setPreferredSize(commonDimension);
     gbc.gridy = 2;
     rightPanel.add(passText, gbc);
 
     String[] roles = {"User", "Admin", "Volunteer"};
     roleComboBox = new JComboBox<>(roles);
     styleComboBox(roleComboBox);
-//    roleComboBox.setPreferredSize(commonDimension);
     gbc.gridy = 3;
     rightPanel.add(roleComboBox, gbc);
 
     JButton loginButton = createStyledButton("Login", new Color(65, 105, 225));
-//    loginButton.setPreferredSize(commonDimension);
     gbc.gridy = 4;
     gbc.gridwidth = 2;
     gbc.fill = GridBagConstraints.HORIZONTAL;
@@ -126,7 +119,6 @@ private void createLoginComponents() {
     gbc.gridx = 1;
 
     JButton signUpButton = createStyledButton("Create Account", new Color(80, 112, 211));
-//    signUpButton.setPreferredSize(commonDimension);
     gbc.gridx = 0;
     gbc.gridy = 6;
     rightPanel.add(signUpButton, gbc);
